@@ -21,7 +21,7 @@ jobs:
       with:
         channel-priority: strict
         environment-file: environment.yaml
-        cache-env: true
+        cache-environment: true
     - name: Run type checker
       shell: bash -l {0}
       run: |

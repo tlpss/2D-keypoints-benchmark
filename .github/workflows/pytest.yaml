@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: install conda env with micromamba
-        uses: mamba-org/setup-micromamba
+        uses: mamba-org/setup-micromamba@v2
         with:
           channel-priority: strict
           environment-file: environment.yaml

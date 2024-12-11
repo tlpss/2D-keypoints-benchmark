@@ -16,4 +16,4 @@ dependencies:
     - pre-commit
     - mypy
     - darglint
-    - -e kp_2D_benchmark/
+    - --use-pep517 kp_2D_benchmark/

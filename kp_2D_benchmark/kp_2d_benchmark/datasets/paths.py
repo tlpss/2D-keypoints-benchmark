@@ -4,6 +4,9 @@ ARFT_DATASET_TRAIN_JSON_PATH = DATASET_DIR / "artf" / "artf-train_resized_512"/ 
 ARFT_DATASET_VAL_JSON_PATH = DATASET_DIR / "artf" / "artf-val_resized_512" / "annotations.json"
 ARFT_DATASET_TEST_JSON_PATH = DATASET_DIR / "artf" / "artf-test_resized_512" / "annotations.json"
 
+ROBOFLOW_GARLIC_256_DATASET_TRAIN_JSON_PATH = DATASET_DIR / "roboflow-garlic" / "256" / "train" / "annotations.json"
+ROBOFLOW_GARLIC_256_DATASET_VAL_JSON_PATH = DATASET_DIR / "roboflow-garlic" / "256" / "val" / "annotations.json"
+ROBOFLOW_GARLIC_256_DATASET_TEST_JSON_PATH = DATASET_DIR / "roboflow-garlic" / "256" / "test" / "annotations.json"
 
 if __name__ == "__main__":
     # assert all paths exist

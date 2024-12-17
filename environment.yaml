@@ -17,6 +17,7 @@ dependencies:
     - mypy
     - darglint
     - -e kp_2D_benchmark/
-    - "airo-typing @ git+https://github.com/airo-ugent/airo-mono@main#subdirectory=airo-typing"
-    - "airo-spatial-algebra @ git+https://github.com/airo-ugent/airo-mono@main#subdirectory=airo-spatial-algebra"
-    - "airo-dataset-tools @ git+https://github.com/airo-ugent/airo-mono@main#subdirectory=airo-dataset-tools"
+    - -e airo-mono/airo-typing/
+    - -e airo-mono/airo-spatial-algebra/
+    - -e airo-mono/airo-dataset-tools/
+    - "huggingface_hub[cli]"

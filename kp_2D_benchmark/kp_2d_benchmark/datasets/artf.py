@@ -25,7 +25,7 @@ def download_artf_all_dataset(override_existing=False):
     # check if dataset already exists
     if os.path.exists(DATASET_DIR / "artf" / "combined") and not override_existing:
         print(
-            f"Folder {DATASET_DIR / "artf" /"combined"} already exists, assuming dataset was already downloaded. If you want to redownload, set override_existing=True"
+            f"Folder {DATASET_DIR / "artf" / "combined"} already exists, assuming dataset was already downloaded. If you want to redownload, set override_existing=True"
         )
         return
 

@@ -9,13 +9,19 @@ ARTF_TSHIRTS_DATASET_TRAIN_JSON_PATH = (
     ARTF_CATEGORIES_DATASETS_DIR / "tshirts-train_resized_512x256" / "tshirts-train.json"
 )
 ARTF_TSHIRTS_DATASET_VAL_JSON_PATH = ARTF_CATEGORIES_DATASETS_DIR / "tshirts-val_resized_512x256" / "tshirts-val.json"
-ARTF_TSHIRTS_DATASET_TEST_JSON_PATH = ARTF_CATEGORIES_DATASETS_DIR / "tshirts-test_resized_512x256" / "tshirts-test.json"
+ARTF_TSHIRTS_DATASET_TEST_JSON_PATH = (
+    ARTF_CATEGORIES_DATASETS_DIR / "tshirts-test_resized_512x256" / "tshirts-test.json"
+)
 
-ARTF_SHORTS_DATASET_TRAIN_JSON_PATH = ARTF_CATEGORIES_DATASETS_DIR / "shorts-train_resized_512x256" / "shorts-train.json"
+ARTF_SHORTS_DATASET_TRAIN_JSON_PATH = (
+    ARTF_CATEGORIES_DATASETS_DIR / "shorts-train_resized_512x256" / "shorts-train.json"
+)
 ARTF_SHORTS_DATASET_VAL_JSON_PATH = ARTF_CATEGORIES_DATASETS_DIR / "shorts-val_resized_512x256" / "shorts-val.json"
 ARTF_SHORTS_DATASET_TEST_JSON_PATH = ARTF_CATEGORIES_DATASETS_DIR / "shorts-test_resized_512x256" / "shorts-test.json"
 
-ARTF_TOWELS_DATASET_TRAIN_JSON_PATH = ARTF_CATEGORIES_DATASETS_DIR / "towels-train_resized_512x256" / "towels-train.json"
+ARTF_TOWELS_DATASET_TRAIN_JSON_PATH = (
+    ARTF_CATEGORIES_DATASETS_DIR / "towels-train_resized_512x256" / "towels-train.json"
+)
 ARTF_TOWELS_DATASET_VAL_JSON_PATH = ARTF_CATEGORIES_DATASETS_DIR / "towels-val_resized_512x256" / "towels-val.json"
 ARTF_TOWELS_DATASET_TEST_JSON_PATH = ARTF_CATEGORIES_DATASETS_DIR / "towels-test_resized_512x256" / "towels-test.json"
 

@@ -1,0 +1,2 @@
+[{"category_id" : 1, "image_id" :1, "keypoints": [0, 0, 2, 1,1,2,2,2,2], "score": 0.8},
+ {"category_id" : 1, "image_id" :2, "keypoints": [10,50,2,12,12,2,12,12,2], "score": 0.9}]

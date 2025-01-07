@@ -3,6 +3,7 @@
 import huggingface_hub
 
 from kp_2d_benchmark import DATASET_DIR
+from kp_2d_benchmark.datasets.base import DatasetContainer
 
 ROBOFLOW_GARLIC_DATASET_256_HF_REPO = "tlpss/roboflow-garlic-256x256"
 ROBOFLOW_GARLIC_256_DIR = DATASET_DIR / "roboflow-garlic" / "256"
@@ -26,6 +27,23 @@ def download_roboflow_garlic_dataset_512_hf(override: bool = False):
             ROBOFLOW_GARLIC_DATASET_512_HF_REPO, repo_type="dataset", local_dir=ROBOFLOW_GARLIC_512_DIR
         )
 
+
+
+class RoboflowGarlic256Dataset(DatasetContainer):
+    json_train_path = ROBOFLOW_GARLIC_256_DIR / "train" / "annotations.json"
+    json_val_path = ROBOFLOW_GARLIC_256_DIR / "val" / "annotations.json"
+    json_test_path = ROBOFLOW_GARLIC_256_DIR / "test" / "annotations.json"
+
+    def download(override: bool = False):
+        download_roboflow_garlic_dataset_256_hf(override=override)
+
+class RoboflowGarlic512Dataset(DatasetContainer):
+    json_train_path = ROBOFLOW_GARLIC_512_DIR / "train" / "annotations.json"
+    json_val_path = ROBOFLOW_GARLIC_512_DIR / "val" / "annotations.json"
+    json_test_path = ROBOFLOW_GARLIC_512_DIR / "test" / "annotations.json"
+
+    def download(override: bool = False):
+        download_roboflow_garlic_dataset_512_hf(override=override)
 
 if __name__ == "__main__":
     download_roboflow_garlic_dataset_256_hf()

@@ -32,7 +32,7 @@ with open("annotations.json", "w") as file:
 
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
-from pydantic import BaseModel, field_validator, model_validator,   RootModel
+from pydantic import BaseModel, RootModel, field_validator, model_validator
 
 # Used by CocoInfo and CocoImage
 Datetime = Union[
@@ -119,6 +119,7 @@ class CocoInstanceAnnotation(BaseModel, extra="allow"):  # allow extra fields, t
         assert v in [0, 1]
         return v
 
+
 class CocoKeypointAnnotation(CocoInstanceAnnotation):
     keypoints: Keypoints
     num_keypoints: Optional[int] = None
@@ -146,7 +147,6 @@ class CocoKeypointAnnotation(CocoInstanceAnnotation):
 
     @model_validator(mode="after")
     def num_keypoints_matches_amount_of_labeled_keypoints(self) -> "CocoKeypointAnnotation":
-
 
         labeled_keypoints = 0
         for v in self.keypoints[2::3]:
@@ -211,7 +211,6 @@ class CocoKeypointsDataset(CocoInstancesDataset):
         return self
 
 
-
 class COCOKeypointResult(BaseModel):
     image_id: int
     category_id: int
@@ -219,12 +218,12 @@ class COCOKeypointResult(BaseModel):
     score: float
     per_keypoint_scores: Optional[List[float]] = None
 
-
     @field_validator("keypoints")
     @classmethod
     def keypoints_must_be_multiple_of_three(cls, v: List[float]) -> List[float]:
         assert len(v) % 3 == 0, "keypoints list must be a multiple of 3"
         return v
+
 
 class COCOKeypointResults(RootModel):
     root: List[COCOKeypointResult]
@@ -238,9 +237,11 @@ class COCOKeypointResults(RootModel):
     def __len__(self):
         return len(self.root)
 
+
 if __name__ == "__main__":
     path = "test/data/keypoint_results.json"
     import json
+
     with open(path, "r") as file:
         data = json.load(file)
         parsed_data = COCOKeypointResults(data)

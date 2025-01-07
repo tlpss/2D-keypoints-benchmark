@@ -1,6 +1,7 @@
 """https://universe.roboflow.com/gesture-recognition-dsn2n/garlic_keypoint"""
 
 import huggingface_hub
+
 from kp_2d_benchmark import DATASET_DIR
 
 ROBOFLOW_GARLIC_DATASET_256_HF_REPO = "tlpss/roboflow-garlic-256x256"

@@ -6,6 +6,7 @@ artf dataset:
 import os
 
 import huggingface_hub
+
 from kp_2d_benchmark import DATASET_DIR
 
 ARTF_RESIZED_SPLITS_ZENODO_URL = (

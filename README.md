@@ -1,4 +1,13 @@
 # 2D-keypoints-benchmark
+A benchmark for 2D category-level keypoint detection with a strong focus on machine vision.
+
+
+
+## Performance numbers 
+|  | RoboFlow Garlic 256x256 | aRTF Tshirts | aRTF Shorts 512 | aRTF towels | 
+| --- | --- | --- | ---|  --- |
+| YOLOv8 |24.2 |27.0 | x| x |
+| PKD - MaxViT | 10.8 | 28.2 | x | x| 
 
 
 ## Local Development

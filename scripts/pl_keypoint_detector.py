@@ -22,7 +22,7 @@ DEFAULT_DICT = {
     "json_dataset_path": "",
     "json_test_dataset_path": "",
     "json_validation_dataset_path": "",
-    "max_epochs": 2,
+    "max_epochs": 50,
     "maximal_gt_keypoint_pixel_distances": "4 8 16",  
     "minimal_keypoint_extraction_pixel_distance": 4,
     "precision": 16,
@@ -149,7 +149,7 @@ def train_and_test(train_name, dataset: DatasetContainer):
     arg_dict = DEFAULT_DICT.copy()
     arg_dict["json_dataset_path"] = dataset.json_train_path
     arg_dict["json_validation_dataset_path"] = dataset.json_val_path
-    arg_dict["json_test_dataset_path"] = dataset.json_test_path
+    #arg_dict["json_test_dataset_path"] = dataset.json_test_path
     arg_dict["wandb_name"] = train_name
 
     categories = json.load(open(dataset.json_train_path))["categories"]
@@ -157,6 +157,7 @@ def train_and_test(train_name, dataset: DatasetContainer):
     for category in categories:
         if category["name"] == dataset.category_name:
             keypoints = category["keypoints"]
+    assert keypoints is not None, f"Category {dataset.category_name} not found in dataset"
     channel_config = keypoints
     arg_dict["keypoint_channel_configuration"] = channel_config
     
@@ -172,9 +173,16 @@ def train_and_test(train_name, dataset: DatasetContainer):
 
 if __name__ == "__main__":
     from kp_2d_benchmark.datasets.roboflow_garlic import RoboflowGarlic256Dataset
-    dataset = RoboflowGarlic256Dataset()
+    from kp_2d_benchmark.datasets.artf import ARTF_Shorts_Dataset, ARTF_Tshirts_Dataset, ARTF_Towels_Dataset
+    
+    # dataset = RoboflowGarlic256Dataset()
+    # train_name = "pkd-maxvit-roboflow_garlic256"
 
-    train_name = "pkd-maxvit-roboflow_garlic256"
+    dataset = ARTF_Tshirts_Dataset()
+    train_name = "pkd-maxvit-artf_tshirts"
+
+    # dataset.download()
+
     train_and_test(train_name, dataset)
 
     from kp_2d_benchmark.eval.calculate_keypoint_distance_metrics import calculate_keypoint_distances,calculate_average_distances
@@ -189,5 +197,11 @@ if __name__ == "__main__":
     print(train_name)
     print(average_distance_dict)
 
+    key = list(average_distance_dict.keys())[0]
+    avg_distances = list(average_distance_dict[key].values())
+    print(avg_distances)
+    print(f"Average distance: {sum(avg_distances)/len(avg_distances)}")
+
+    
     
     

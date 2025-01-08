@@ -8,6 +8,7 @@ import os
 import huggingface_hub
 
 from kp_2d_benchmark import DATASET_DIR
+from kp_2d_benchmark.datasets.base import DatasetContainer
 
 ARTF_RESIZED_SPLITS_ZENODO_URL = (
     "https://zenodo.org/records/10875542/files/aRTFClothes-resized-paper-splits.zip?download=1"
@@ -39,15 +40,15 @@ def download_artf_all_dataset(override_existing=False):
     os.system(f"unzip {DATASET_DIR / 'artf_combined.zip'} -d {ARTF_COMBINED_DATASET_DIR}")
 
 
-def download_artf_categories_dataset(override_existing=False):
+def download_artf_categories_dataset(override=False):
     # check if dataset already exists
-    if os.path.exists(ARTF_CATEGORIES_DATASETS_DIR) and not override_existing:
+    if os.path.exists(ARTF_CATEGORIES_DATASETS_DIR) and not override:
         print(
             f"Folder {ARTF_CATEGORIES_DATASETS_DIR} already exists, assuming dataset was already downloaded. If you want to redownload, set override_existing=True"
         )
         return
 
-    if override_existing and ARTF_CATEGORIES_DATASETS_DIR.exists():
+    if override and ARTF_CATEGORIES_DATASETS_DIR.exists():
         # remove the directory
         import shutil
 
@@ -66,5 +67,32 @@ def download_artf_categories_dataset(override_existing=False):
     )
 
 
+class ARTF_Tshirts_Dataset(DatasetContainer):
+    json_train_path = ARTF_CATEGORIES_DATASETS_DIR / "tshirts-train_resized_512x256" / "tshirts-train.json"
+    json_val_path = ARTF_CATEGORIES_DATASETS_DIR / "tshirts-val_resized_512x256" / "tshirts-val.json"
+    json_test_path = ARTF_CATEGORIES_DATASETS_DIR / "tshirts-test_resized_512x256" / "tshirts-test.json"
+    category_name = "tshirt"
+
+    def download(override: bool = False):
+        download_artf_categories_dataset(override=override)
+
+class ARTF_Shorts_Dataset(DatasetContainer):
+    json_train_path = ARTF_CATEGORIES_DATASETS_DIR / "shorts-train_resized_512x256" / "shorts-train.json"
+    json_val_path = ARTF_CATEGORIES_DATASETS_DIR / "shorts-val_resized_512x256" / "shorts-val.json"
+    json_test_path = ARTF_CATEGORIES_DATASETS_DIR / "shorts-test_resized_512x256" / "shorts-test.json"
+    category_name = "shorts"
+
+    def download(override: bool = False):
+        download_artf_categories_dataset(override=override)
+
+class ARTF_Towels_Dataset(DatasetContainer):
+    json_train_path = ARTF_CATEGORIES_DATASETS_DIR / "towels-train_resized_512x256" / "towels-train.json"
+    json_val_path = ARTF_CATEGORIES_DATASETS_DIR / "towels-val_resized_512x256" / "towels-val.json"
+    json_test_path = ARTF_CATEGORIES_DATASETS_DIR / "towels-test_resized_512x256" / "towels-test.json"
+    category_name = "towel"
+
+    def download(override: bool = False):
+        download_artf_categories_dataset(override=override)
+
 if __name__ == "__main__":
-    download_artf_categories_dataset(override_existing=False)
+    download_artf_categories_dataset(override=False)

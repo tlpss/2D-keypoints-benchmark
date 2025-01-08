@@ -211,14 +211,15 @@ def train_and_test_yolo_keypoints(train_name, dataset: DatasetContainer):
     WANDB_FINISH()
 
 if __name__ == "__main__":
-    from kp_2d_benchmark.datasets import RoboflowGarlic256Dataset
+    from kp_2d_benchmark.datasets import RoboflowGarlic256Dataset, ARTF_Tshirts_Dataset
     import json 
     from kp_2d_benchmark.eval.coco_results import CocoKeypointsDataset
-    dataset = RoboflowGarlic256Dataset()
+    
+    # dataset = RoboflowGarlic256Dataset()
+    # train_name = "yolov8-roboflow_garlic256"
 
-
-    train_name = "yolov8-roboflow_garlic256"
-
+    dataset = ARTF_Tshirts_Dataset()
+    train_name = "yolov8-artf_tshirts"
     train_and_test_yolo_keypoints(train_name, dataset)
 
     from kp_2d_benchmark.eval.calculate_keypoint_distance_metrics import calculate_keypoint_distances,calculate_average_distances
@@ -232,7 +233,13 @@ if __name__ == "__main__":
     
     print(train_name)
     print(average_distance_dict)
+    
+    key = list(average_distance_dict.keys())[0]
+    avg_distances = list(average_distance_dict[key].values())
+    print(avg_distances)
+    print(f"Average distance: {sum(avg_distances)/len(avg_distances)}")
 
+    
 
     
 

@@ -1,3 +1,6 @@
 [submodule "airo-mono"]
 	path = airo-mono
 	url = https://github.com/airo-ugent/airo-mono.git
+[submodule "keypoint-detection"]
+	path = keypoint-detection
+	url = https://github.com/tlpss/keypoint-detection.git

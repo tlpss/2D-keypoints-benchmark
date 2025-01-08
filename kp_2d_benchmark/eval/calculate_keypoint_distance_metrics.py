@@ -52,7 +52,6 @@ def calculate_keypoint_distances(coco_dataset: CocoKeypointsDataset, coco_result
                 (predicted_keypoint[0] - annotated_keypoint[0]) ** 2
                 + (predicted_keypoint[1] - annotated_keypoint[1]) ** 2
             ) ** 0.5
-            print(distance)
             distance_dict[category_id][name].append(distance)
         # calculate the distance for each keypoint, and add them to the list
 

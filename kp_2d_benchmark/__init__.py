@@ -6,7 +6,7 @@
 
 from pathlib import Path
 
-DATA_DIR = Path(__file__).parents[2] / "data"
+DATA_DIR = Path(__file__).parents[1] / "data"
 
 DATASET_DIR = DATA_DIR / "datasets"
 

@@ -44,3 +44,4 @@ if __name__ == "__main__":
             continue
         json_dict = json.load(open(json_path, "r"))
         print(f"{json_path.relative_to(DATASET_DIR)} contains {len(json_dict['annotations'])} images")
+

@@ -33,6 +33,7 @@ class RoboflowGarlic256Dataset(DatasetContainer):
     json_train_path = ROBOFLOW_GARLIC_256_DIR / "train" / "annotations.json"
     json_val_path = ROBOFLOW_GARLIC_256_DIR / "val" / "annotations.json"
     json_test_path = ROBOFLOW_GARLIC_256_DIR / "test" / "annotations.json"
+    category_name  = "garlic"
 
     def download(override: bool = False):
         download_roboflow_garlic_dataset_256_hf(override=override)

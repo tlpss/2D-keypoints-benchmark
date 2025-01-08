@@ -1,5 +1,3 @@
-
-
 import json
 
 
@@ -13,8 +11,8 @@ class DatasetContainer:
 
     def download(override: bool = False):
         raise NotImplementedError
-    
-    @property 
+
+    @property
     def num_keypoints(self):
         with open(self.json_train_path) as f:
             data = json.load(f)
@@ -31,7 +29,7 @@ class DatasetContainer:
             json_path = self.json_test_path
         else:
             raise ValueError(f"split must be one of ['train', 'val', 'test'], got {split}")
-        
+
         with open(json_path) as f:
             data = json.load(f)
             return len(data["images"])

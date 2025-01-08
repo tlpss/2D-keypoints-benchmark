@@ -28,15 +28,15 @@ def download_roboflow_garlic_dataset_512_hf(override: bool = False):
         )
 
 
-
 class RoboflowGarlic256Dataset(DatasetContainer):
     json_train_path = ROBOFLOW_GARLIC_256_DIR / "train" / "annotations.json"
     json_val_path = ROBOFLOW_GARLIC_256_DIR / "val" / "annotations.json"
     json_test_path = ROBOFLOW_GARLIC_256_DIR / "test" / "annotations.json"
-    category_name  = "garlic"
+    category_name = "garlic"
 
     def download(override: bool = False):
         download_roboflow_garlic_dataset_256_hf(override=override)
+
 
 class RoboflowGarlic512Dataset(DatasetContainer):
     json_train_path = ROBOFLOW_GARLIC_512_DIR / "train" / "annotations.json"
@@ -45,6 +45,7 @@ class RoboflowGarlic512Dataset(DatasetContainer):
 
     def download(override: bool = False):
         download_roboflow_garlic_dataset_512_hf(override=override)
+
 
 if __name__ == "__main__":
     download_roboflow_garlic_dataset_256_hf()

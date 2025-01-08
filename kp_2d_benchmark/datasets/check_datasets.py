@@ -1,5 +1,3 @@
-from kp_2d_benchmark import DATASET_DIR
-from kp_2d_benchmark.datasets.artf import ARTF_CATEGORIES_DATASETS_DIR
 from kp_2d_benchmark.datasets import DATASETS
 
 if __name__ == "__main__":

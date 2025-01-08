@@ -76,6 +76,7 @@ class ARTF_Tshirts_Dataset(DatasetContainer):
     def download(override: bool = False):
         download_artf_categories_dataset(override=override)
 
+
 class ARTF_Shorts_Dataset(DatasetContainer):
     json_train_path = ARTF_CATEGORIES_DATASETS_DIR / "shorts-train_resized_512x256" / "shorts-train.json"
     json_val_path = ARTF_CATEGORIES_DATASETS_DIR / "shorts-val_resized_512x256" / "shorts-val.json"
@@ -85,6 +86,7 @@ class ARTF_Shorts_Dataset(DatasetContainer):
     def download(override: bool = False):
         download_artf_categories_dataset(override=override)
 
+
 class ARTF_Towels_Dataset(DatasetContainer):
     json_train_path = ARTF_CATEGORIES_DATASETS_DIR / "towels-train_resized_512x256" / "towels-train.json"
     json_val_path = ARTF_CATEGORIES_DATASETS_DIR / "towels-val_resized_512x256" / "towels-val.json"
@@ -93,6 +95,7 @@ class ARTF_Towels_Dataset(DatasetContainer):
 
     def download(override: bool = False):
         download_artf_categories_dataset(override=override)
+
 
 if __name__ == "__main__":
     download_artf_categories_dataset(override=False)

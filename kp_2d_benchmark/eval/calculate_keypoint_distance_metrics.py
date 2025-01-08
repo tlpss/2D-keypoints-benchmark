@@ -63,7 +63,6 @@ def calculate_keypoint_distances(coco_dataset: CocoKeypointsDataset, coco_result
     # TODO: what to to with these? cannot take FP into account in distance metric?.
     # for now, just ignore them.
 
-
     # if there are categories for which we have not a single prediction, we should also ignore these categories
     new_distance_dict = {}
     for category_id, keypoint_dict in distance_dict.items():
@@ -71,7 +70,6 @@ def calculate_keypoint_distances(coco_dataset: CocoKeypointsDataset, coco_result
             continue
         new_distance_dict[category_id] = keypoint_dict
     return new_distance_dict
-    
 
 
 def calculate_average_distances(distance_dict):

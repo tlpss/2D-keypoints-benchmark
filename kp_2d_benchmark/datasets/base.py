@@ -1,5 +1,7 @@
 import json
 
+from kp_2d_benchmark.eval.coco_results import CocoKeypointsDataset
+
 
 # base class for all datasets.
 class DatasetContainer:
@@ -33,6 +35,18 @@ class DatasetContainer:
         with open(json_path) as f:
             data = json.load(f)
             return len(data["images"])
+
+    def get_split(self, split="train"):
+        if split == "train":
+            json_path = self.json_train_path
+        elif split == "val":
+            json_path = self.json_val_path
+        elif split == "test":
+            json_path = self.json_test_path
+        else:
+            raise ValueError(f"split must be one of ['train', 'val', 'test'], got {split}")
+
+        return CocoKeypointsDataset(**json.load(open(json_path)))
 
     def __repr__(self):
         return f"{self.__class__.__name__}"

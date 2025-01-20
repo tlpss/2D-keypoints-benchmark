@@ -1,7 +1,7 @@
 from kp_2d_benchmark.eval.coco_results import COCOKeypointResults, CocoKeypointsDataset
 
 
-def calculate_keypoint_distances(coco_dataset: CocoKeypointsDataset, coco_results: COCOKeypointResults):
+def calculate_keypoint_distances(coco_dataset: CocoKeypointsDataset, coco_results: COCOKeypointResults):  # noqa: C901
 
     # create dict with categories and keypoint ids
 
@@ -105,19 +105,35 @@ def calculate_std_deviation(distance_dict):
     return std_deviation_dict
 
 
+def calculate_pck(distance_dict, pixel_threshold=4):
+    """
+    Calculate the percentage of correct keypoints for a given pixel threshold.
+    """
+    pck_dict = {}
+    for category_id, keypoint_dict in distance_dict.items():
+        pck_dict[category_id] = {}
+        for keypoint_id, distances in keypoint_dict.items():
+            pck_dict[category_id][keypoint_id] = sum(1 for distance in distances if distance < pixel_threshold) / len(
+                distances
+            )
+    return pck_dict
+
+
 if __name__ == "__main__":
     dataset_path = "/home/tlips/Code/2D-keypoints-benchmark/test/data/dummy_keypoints.json"
     coco_results_path = "/home/tlips/Code/2D-keypoints-benchmark/test/data/dummy_keypoint_results.json"
     import json
 
     with open(dataset_path, "r") as f:
-        coco_dataset = CocoKeypointsDataset.parse_obj(json.load(f))
+        coco_dataset = CocoKeypointsDataset(**json.load(f))
     with open(coco_results_path, "r") as f:
-        coco_results = COCOKeypointResults.parse_obj(json.load(f))
+        coco_results = COCOKeypointResults(json.load(f))
     distance_dict = calculate_keypoint_distances(coco_dataset, coco_results)
     average_distance_dict = calculate_average_distances(distance_dict)
     median_distance_dict = calculate_median_distances(distance_dict)
     std_deviation_dict = calculate_std_deviation(distance_dict)
+    pck_dict = calculate_pck(distance_dict, pixel_threshold=4)
+    print(pck_dict)
     print(average_distance_dict)
     # print(median_distance_dict)
     # print(std_deviation_dict)

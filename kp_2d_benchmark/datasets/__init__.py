@@ -1,5 +1,5 @@
 from kp_2d_benchmark.datasets.artf import ARTF_Shorts_Dataset, ARTF_Towels_Dataset, ARTF_Tshirts_Dataset
-from kp_2d_benchmark.datasets.roboflow_garlic import RoboflowGarlic256Dataset, RoboflowGarlic512Dataset
+from kp_2d_benchmark.datasets.roboflow_garlic import RoboflowGarlic256Dataset
 
 DATASETS = [RoboflowGarlic256Dataset(), ARTF_Shorts_Dataset(), ARTF_Tshirts_Dataset(), ARTF_Towels_Dataset()]
 

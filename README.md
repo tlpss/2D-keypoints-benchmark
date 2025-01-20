@@ -2,12 +2,23 @@
 A benchmark for 2D category-level keypoint detection with a strong focus on machine vision.
 
 
+## Datasets sizes
+
+| | image resolution | # train images | # val images | # test images |
+|---|---|---|---|---|
+RoboFlow Garlic | 256x256 | 697|104 |199 |
+aRTF Tshirts |  512x256 |168 |42  | 400 |
+
+
 
 ## Performance numbers
-|  | RoboFlow Garlic 256x256 | aRTF Tshirts | aRTF Shorts 512 | aRTF towels |
-| --- | --- | --- | ---|  --- |
-| YOLOv8 |24.2 |27.0 | x| x |
-| PKD - MaxViT | 10.8 | 28.2 | x | x|
+
+**average keypoint distance**
+
+| model      |   ARTF_Tshirts_Dataset |   RoboflowGarlic256Dataset |
+|:-----------|-----------------------:|---------------------------:|
+| pkd-maxvit |                   17.6 |                       10.8 |
+| yolov8     |                   27   |                       24.2 |
 
 
 ## Local Development

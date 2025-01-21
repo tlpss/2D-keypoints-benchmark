@@ -1,4 +1,6 @@
-"""https://universe.roboflow.com/gesture-recognition-dsn2n/garlic_keypoint"""
+"""https://universe.roboflow.com/gesture-recognition-dsn2n/garlic_keypoint
+No additional preprocessing was performed, except fo an image resize.
+"""
 
 import huggingface_hub
 

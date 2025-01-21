@@ -21,6 +21,7 @@ class DatasetContainer:
             for category in data["categories"]:
                 if category["name"] == self.category_name:
                     return len(category["keypoints"])
+        raise ValueError(f"Category {self.category_name} not found in dataset")
 
     def size(self, split="train"):
         if split == "train":

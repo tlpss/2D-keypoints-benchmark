@@ -47,7 +47,8 @@ def calculate_keypoint_distances(coco_dataset: CocoKeypointsDataset, coco_result
             # add the distance to the list
             predicted_keypoint = predicted_keypoints[i]
             annotated_keypoint = annotated_keypoints[i]
-
+            if annotated_keypoint[2] == 0:  # skip keypoints that are not in view.
+                continue
             distance = (
                 (predicted_keypoint[0] - annotated_keypoint[0]) ** 2
                 + (predicted_keypoint[1] - annotated_keypoint[1]) ** 2
@@ -89,6 +90,10 @@ def calculate_median_distances(distance_dict):
         median_distance_dict[category_id] = {}
         for keypoint_id, distances in keypoint_dict.items():
             median_distance_dict[category_id][keypoint_id] = sorted(distances)[len(distances) // 2]
+        # also report overall median distance
+        # distances = [distance for distances in keypoint_dict.values() for distance in distances]
+        # median_distance_dict[category_id]["overall"] = sorted(distances)[len(distances) // 2]
+
     return median_distance_dict
 
 

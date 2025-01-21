@@ -14,11 +14,10 @@ aRTF Tshirts |  512x256 |168 |42  | 400 |
 ## Performance numbers
 
 **average keypoint distance**
-
-| model      |   ARTF_Tshirts_Dataset |   RoboflowGarlic256Dataset |
-|:-----------|-----------------------:|---------------------------:|
-| pkd-maxvit |                   17.6 |                       10.8 |
-| yolov8     |                   27   |                       24.2 |
+| model      |   ARTF_Shorts_Dataset |   ARTF_Towels_Dataset |   ARTF_Tshirts_Dataset |   CUB200_2011_512 |   RoboflowGarlic256Dataset |
+|:-----------|----------------------:|----------------------:|-----------------------:|------------------:|---------------------------:|
+| pkd-maxvit |                  38.3 |                  17.3 |                   19   |              11.8 |                        6.9 |
+| yolov8     |                  39   |                  24.5 |                   26.9 |              26   |                       24.2 |
 
 
 ## Local Development

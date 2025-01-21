@@ -4,6 +4,7 @@ from kp_2d_benchmark.datasets import DATASETS
 from kp_2d_benchmark.eval.calculate_keypoint_distance_metrics import (
     calculate_average_distances,
     calculate_keypoint_distances,
+    calculate_median_distances,
 )
 from kp_2d_benchmark.eval.coco_results import COCOKeypointResults
 
@@ -29,15 +30,19 @@ def get_metrics(file_path, metric_csv_path):
     test_dataset = dataset.get_split("test")
     distance_dict = calculate_keypoint_distances(test_dataset, results)
     average_distance_dict = calculate_average_distances(distance_dict)
-    print(average_distance_dict)
+
+    median_distance_dict = calculate_median_distances(distance_dict)
     avg_distance = sum([sum(x.values()) for x in average_distance_dict.values()]) / sum(
         [len(x) for x in average_distance_dict.values()]
     )
-
+    median_distance = sum([sum(x.values()) for x in median_distance_dict.values()]) / sum(
+        [len(x) for x in median_distance_dict.values()]
+    )
+    print(median_distance_dict)
     # load the csv file and append the new metrics
     with open(metric_csv_path, "r") as f:
         data = f.readlines()
-    data.append(f"{model},{dataset_name},{avg_distance}\n")
+    data.append(f"{model},{dataset_name},{avg_distance},{median_distance}\n")
     with open(metric_csv_path, "w") as f:
         f.writelines(data)
     print(f"Metrics for model {model} and dataset {dataset_name} saved to {metric_csv_path}")
@@ -67,7 +72,7 @@ if __name__ == "__main__":
     metric_csv_path = "metrics.csv"
 
     with open(metric_csv_path, "w") as f:
-        f.write("model,dataset,average_keypoint_distance\n")
+        f.write("model,dataset,average_keypoint_distance, median_keypoint_distance\n")
     for file in os.listdir(results_dir):
         if file.endswith(".json"):
             # get full path

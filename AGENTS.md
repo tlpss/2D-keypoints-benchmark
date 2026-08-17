@@ -73,9 +73,21 @@ python kp_2d_benchmark/eval/calculate_all_metrics.py
 It rewrites `metrics.csv` from every `.json` directly in `data/results/` (subdirectories are skipped, which
 is how superseded results are archived).
 
-Two properties of the metric worth knowing: distances are in **raw pixels**, so they are only comparable
-between datasets of equal resolution; and images for which a model produced **no prediction are skipped**
-rather than penalised, so the metric is not detection-aware.
+Five metrics are reported, defined in the "Metrics" section of the README: detection rate, median NME,
+PCK@0.05, strict success@0.05 and mAP@0.05. Things worth knowing before touching them:
+
+- **They disagree about undetected images on purpose.** PCK, strict success and mAP charge for them; the
+  median NME and the legacy raw-pixel distance columns skip them. Do not "fix" that inconsistency without
+  reading the README first.
+- **mAP is the submodule's metric**, `keypoint_detection.models.metrics.KeypointAPMetric`, not COCO OKS.
+  It is also the only metric that penalises predicting an out-of-view keypoint, which is why it sits far
+  below PCK on AP-10K and CUB-200.
+- **`AP_ALPHA`, `PCK_ALPHA` and `STRICT_SUCCESS_ALPHA` are benchmark constants.** They are all 0.05 and
+  share the same normaliser, `max(bbox_width, bbox_height)`. Changing one changes every number in its
+  column, so treat them like the pinned dependencies below.
+- **The raw-pixel columns stay in `metrics.csv`** for continuity, and their value must not change when the
+  evaluation code is refactored. `test/test_metrics.py` pins the behaviour they depend on; the numbers
+  themselves can only be checked against a previous `metrics.csv`, since the result files are gitignored.
 
 ## Reproducibility: the two pinned dependencies
 

@@ -131,27 +131,50 @@ versions of this table, but are no longer the headline numbers.
 
 ## Performance numbers
 
-> The metrics defined above are specified but not yet implemented: the tables below still report the
-> legacy raw-pixel distances. They are regenerated from the existing result files, without retraining,
-> once the evaluation code lands.
-
-**average keypoint distance**
+**detection_rate**
 
 | model          |   AP10K_512 |   ARTF_Shorts_Dataset |   ARTF_Towels_Dataset |   ARTF_Tshirts_Dataset |   CUB200_2011_512 |   GITW_256 |   RoboflowGarlic256Dataset |
 |:---------------|------------:|----------------------:|----------------------:|-----------------------:|------------------:|-----------:|---------------------------:|
-| pkd-DinoV2Up   |        34.9 |                  16.5 |                   9   |                   19.7 |               9.8 |        7.1 |                        4.8 |
-| pkd-MaxVitUnet |        37.3 |                  40.4 |                  17.8 |                   17.8 |              11.3 |        5   |                        4.9 |
-| yolo26s        |        28.9 |                  89.1 |                  21.8 |                   41.5 |              11.3 |        7.7 |                        4.1 |
-| yolov8         |        34.5 |                  60   |                  20.9 |                   56.4 |              13.2 |       10.9 |                        5.9 |
+| pkd-DinoV2Up   |       100.0 |                 100.0 |                 100.0 |                  100.0 |             100.0 |      100.0 |                      100.0 |
+| pkd-MaxVitUnet |       100.0 |                 100.0 |                 100.0 |                  100.0 |             100.0 |      100.0 |                      100.0 |
+| yolo26s        |        99.5 |                  95.6 |                  92.5 |                   78.8 |              99.5 |       99.4 |                       99.5 |
+| yolov8         |        99.9 |                  98.9 |                  94.5 |                   98.2 |              99.8 |      100.0 |                      100.0 |
 
-**median keypoint distance**
+**median_nme**
 
 | model          |   AP10K_512 |   ARTF_Shorts_Dataset |   ARTF_Towels_Dataset |   ARTF_Tshirts_Dataset |   CUB200_2011_512 |   GITW_256 |   RoboflowGarlic256Dataset |
 |:---------------|------------:|----------------------:|----------------------:|-----------------------:|------------------:|-----------:|---------------------------:|
-| pkd-DinoV2Up   |        12.2 |                   3.8 |                   1.8 |                    3.4 |               6.4 |        3   |                        3   |
-| pkd-MaxVitUnet |        13   |                   7.7 |                   1.3 |                    2.8 |               6.7 |        2.1 |                        3.1 |
-| yolo26s        |        15.2 |                  46.9 |                   7.3 |                   13.3 |               7.9 |        4.7 |                        3.2 |
-| yolov8         |        20.2 |                  32.8 |                   8.7 |                   22.5 |               9.5 |        7.3 |                        4.9 |
+| pkd-DinoV2Up   |       0.024 |                 0.019 |                 0.010 |                  0.015 |             0.018 |      0.014 |                      0.027 |
+| pkd-MaxVitUnet |       0.026 |                 0.026 |                 0.007 |                  0.013 |             0.018 |      0.011 |                      0.026 |
+| yolo26s        |       0.032 |                 0.287 |                 0.041 |                  0.065 |             0.021 |      0.021 |                      0.030 |
+| yolov8         |       0.044 |                 0.186 |                 0.048 |                  0.084 |             0.027 |      0.036 |                      0.042 |
+
+**pck@0.05**
+
+| model          |   AP10K_512 |   ARTF_Shorts_Dataset |   ARTF_Towels_Dataset |   ARTF_Tshirts_Dataset |   CUB200_2011_512 |   GITW_256 |   RoboflowGarlic256Dataset |
+|:---------------|------------:|----------------------:|----------------------:|-----------------------:|------------------:|-----------:|---------------------------:|
+| pkd-DinoV2Up   |        68.0 |                  71.4 |                  88.7 |                   78.2 |              87.8 |       88.8 |                       81.4 |
+| pkd-MaxVitUnet |        65.0 |                  54.6 |                  79.3 |                   77.6 |              84.9 |       92.1 |                       78.4 |
+| yolo26s        |        63.8 |                   7.4 |                  56.3 |                   30.3 |              83.4 |       83.1 |                       81.4 |
+| yolov8         |        54.8 |                  10.2 |                  49.6 |                   30.1 |              79.5 |       65.3 |                       58.0 |
+
+**strict_success@0.05**
+
+| model          |   AP10K_512 |   ARTF_Shorts_Dataset |   ARTF_Towels_Dataset |   ARTF_Tshirts_Dataset |   CUB200_2011_512 |   GITW_256 |   RoboflowGarlic256Dataset |
+|:---------------|------------:|----------------------:|----------------------:|-----------------------:|------------------:|-----------:|---------------------------:|
+| pkd-DinoV2Up   |        11.4 |                  19.4 |                  73.8 |                   24.8 |              24.7 |       60.0 |                       65.8 |
+| pkd-MaxVitUnet |         9.4 |                  11.7 |                  50.7 |                   22.2 |              18.7 |       74.5 |                       58.3 |
+| yolo26s        |        12.8 |                   0.0 |                  26.2 |                    0.2 |              17.9 |       46.8 |                       65.3 |
+| yolov8         |         6.9 |                   0.0 |                  14.5 |                    0.2 |              12.3 |       18.4 |                       36.7 |
+
+**mAP@0.05**
+
+| model          |   AP10K_512 |   ARTF_Shorts_Dataset |   ARTF_Towels_Dataset |   ARTF_Tshirts_Dataset |   CUB200_2011_512 |   GITW_256 |   RoboflowGarlic256Dataset |
+|:---------------|------------:|----------------------:|----------------------:|-----------------------:|------------------:|-----------:|---------------------------:|
+| pkd-DinoV2Up   |       0.559 |                 0.627 |                 0.850 |                  0.728 |             0.790 |      0.867 |                      0.717 |
+| pkd-MaxVitUnet |       0.537 |                 0.439 |                 0.699 |                  0.726 |             0.760 |      0.904 |                      0.694 |
+| yolo26s        |       0.470 |                 0.010 |                 0.407 |                  0.142 |             0.713 |      0.785 |                      0.719 |
+| yolov8         |       0.352 |                 0.018 |                 0.335 |                  0.117 |             0.654 |      0.532 |                      0.386 |
 
 Numbers are produced by `kp_2d_benchmark/eval/calculate_all_metrics.py` from the result files in
 `data/results/`, and are reproducible: the training uses a fixed seed, and re-running a model on an
@@ -172,12 +195,20 @@ Both have already produced mislabeled numbers, so keep them pinned when updating
 
 ### Known weak spots in the table
 
-- **ARTF_Shorts is poor for both yolo models** (median 32.8 and 46.9). It is the smallest training split in
-  the benchmark, so at 100 epochs and batch 16 it gets only ~600 optimiser steps, against ~57,000 for
-  AP-10K. The budget is specified in epochs, so it scales with dataset size; these cells are likely
-  undertrained rather than genuinely hard.
-- **`yolo26s` detects nothing in 21% of the ARTF_Tshirts test set** (315/400). Since images without a
-  prediction are skipped, that cell is computed on the images the model did find.
+- **ARTF_Shorts is poor for both yolo models** (PCK@0.05 of 7.4 and 10.2, mAP of 0.010 and 0.018, and not a
+  single image with all keypoints correct). It is the smallest training split in the benchmark, so at 100
+  epochs and batch 16 it gets only ~600 optimiser steps, against ~57,000 for AP-10K. The budget is
+  specified in epochs, so it scales with dataset size; these cells are likely undertrained rather than
+  genuinely hard.
+- **`yolo26s` detects nothing in 21% of the ARTF_Tshirts test set**, which is what its detection rate of
+  78.8 reports. Those images are counted as failures by PCK, strict success and mAP, but are still skipped
+  by the raw pixel distances in `metrics.csv`.
+- **Strict success is far below PCK on the many-keypoint datasets.** AP-10K has 17 keypoints and the best
+  model gets 68.0 PCK but only 11.4 of its images completely right. That is arithmetic rather than a
+  surprise, but it is the number that matters if the whole keypoint configuration has to be correct.
+- **mAP is much lower than PCK on AP-10K and CUB-200** because it is the only metric that charges for
+  predicting a keypoint that is out of view, and 41% respectively 20% of their keypoint slots are. Both
+  model families always emit every keypoint channel, so both pay for it.
 
 
 ## Local Development

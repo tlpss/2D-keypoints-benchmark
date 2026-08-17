@@ -131,7 +131,16 @@ def create_coco_results_file(dataset: DatasetContainer, model, results_path):
         f.write(results.model_dump_json())
 
 
-def train_and_test_yolo_keypoints(train_name, dataset: DatasetContainer):
+def train_and_test_yolo_keypoints(
+    train_name, dataset: DatasetContainer, model_name: str = "yolov8s-pose", model_label: str = None
+):
+    """Train an ultralytics pose model on a benchmark dataset and write its coco results file.
+
+    model_name: any ultralytics pose checkpoint, e.g. "yolov8s-pose" or "yolo26s-pose".
+    model_label: name used in the results file and hence in metrics.csv. Defaults to the checkpoint name
+        without its "-pose" suffix. Passed explicitly for yolov8, whose column predates this argument.
+    """
+    model_label = model_label or model_name.removesuffix("-pose")
 
     wandb.init(project="kp-benchmark", name=train_name)
 
@@ -143,7 +152,7 @@ def train_and_test_yolo_keypoints(train_name, dataset: DatasetContainer):
     yolo_train_name = f"{train_name}_{wandb.run.id}"
 
     # create a model pretrained on COCO
-    model = YOLO("yolov8s-pose")
+    model = YOLO(model_name)
 
     # create the temp yolo dataset
 
@@ -202,7 +211,7 @@ def train_and_test_yolo_keypoints(train_name, dataset: DatasetContainer):
     print(all_aps)
 
     # create coco results file
-    results_path = DATA_DIR / "results" / f"model=yolov8,dataset={dataset.__repr__()}.json"
+    results_path = DATA_DIR / "results" / f"model={model_label},dataset={dataset.__repr__()}.json"
     results_path.parent.mkdir(parents=True, exist_ok=True)
     create_coco_results_file(dataset, model, results_path)
 
@@ -220,14 +229,19 @@ def train_and_test_yolo_keypoints(train_name, dataset: DatasetContainer):
 
 
 if __name__ == "__main__":
-    pass
+    from argparse import ArgumentParser
 
-    from kp_2d_benchmark.datasets import CUB200_2011_512
+    import kp_2d_benchmark.datasets as datasets
 
-    # dataset = RoboflowGarlic256Dataset()
-    # train_name = "yolov8-roboflow_garlic256"
-    train_and_test_yolo_keypoints("yolov8-CUB200", CUB200_2011_512())
+    parser = ArgumentParser(description="train an ultralytics pose model on one benchmark dataset")
+    parser.add_argument("dataset", help="name of a DatasetContainer in kp_2d_benchmark.datasets, e.g. AP10K_512")
+    parser.add_argument("--model", default="yolov8s-pose", help="ultralytics pose checkpoint to finetune")
+    parser.add_argument(
+        "--label", default=None, help="name to use in metrics.csv, defaults to the checkpoint without '-pose'"
+    )
+    args = parser.parse_args()
 
-    # for dataset in DATASETS:
-    #     train_name = f"yolv8-{dataset.__repr__()}"
-    #     train_and_test_yolo_keypoints(train_name, dataset)
+    label = args.label or args.model.removesuffix("-pose")
+    train_and_test_yolo_keypoints(
+        f"{label}-{args.dataset}", getattr(datasets, args.dataset)(), model_name=args.model, model_label=args.label
+    )

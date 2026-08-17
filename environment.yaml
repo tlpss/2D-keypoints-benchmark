@@ -21,3 +21,6 @@ dependencies:
     - -e airo-mono/airo-spatial-algebra/
     - -e airo-mono/airo-dataset-tools/
     - "huggingface_hub[cli]"
+    # pinned: the yolo rows in the results table depend on the ultralytics version, and yolo26 needs >=8.4.
+    # note that torch and the keypoint-detection submodule are still installed manually, not declared here.
+    - ultralytics==8.4.120

@@ -101,8 +101,15 @@ precision-recall ranking, which no other metric in the table uses.
 Thresholds are normalised by dividing keypoint coordinates by `s` before matching, so a threshold is an `α`
 rather than a pixel count, and `α ∈ {0.02, 0.05}` is used. This is the only deviation from the submodule's
 own configuration, which uses raw pixel thresholds (default `2 4`); the matching and AP computation are
-untouched. Re-running with pixel thresholds reproduces the `test/meanAP` that the keypoint-detection
-training loop logs to wandb, which is a useful end-to-end check of the evaluation path.
+untouched.
+
+The AP here is not numerically identical to the `test/meanAP` that the keypoint-detection training loop
+logs, even at the same pixel thresholds. The result files store only the highest-scoring detection per
+keypoint channel, whereas the training loop extracts up to 20 candidate peaks per channel, so the two
+integrate different precision-recall curves. In this table the false positives can only come from a
+mislocalised top-1 detection or from a prediction on an out-of-view keypoint, which makes the metric a
+ranking over images rather than a full detection AP. Storing more than one candidate per channel would
+require the result files to carry multiple instances per image, which the single-instance scope rules out.
 
 Unlike the other four metrics, mAP does not ignore keypoints annotated `v = 0`: the ground truth for that
 channel is empty, so a model that still emits a keypoint there takes a false positive. This is the

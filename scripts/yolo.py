@@ -75,8 +75,9 @@ def create_coco_results_file(dataset: DatasetContainer, model, results_path):
     for image in data["images"]:
         # create absolute path
         image_path = Path(dataset.json_test_path).parent / image["file_name"]
-        # load the image
-        img = cv2.imread(str(image_path))
+        # load the image. cv2 reads BGR, and ultralytics only converts to RGB for numpy inputs, not for the
+        # tensors we hand it (see Predictor.preprocess), while it trains on RGB. So convert here.
+        img = cv2.cvtColor(cv2.imread(str(image_path)), cv2.COLOR_BGR2RGB)
         # convert to torch tensor
         img = torch.from_numpy(img).to(model.device).float() / 255.0
         img = img.permute(2, 0, 1).unsqueeze(0)

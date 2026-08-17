@@ -51,25 +51,45 @@ contribute to the distance metrics rather than being penalised, so the metrics a
 
 | model          |   AP10K_512 |   ARTF_Shorts_Dataset |   ARTF_Towels_Dataset |   ARTF_Tshirts_Dataset |   CUB200_2011_512 |   GITW_256 |   RoboflowGarlic256Dataset |
 |:---------------|------------:|----------------------:|----------------------:|-----------------------:|------------------:|-----------:|---------------------------:|
-| pkd-DinoV2Up   |        35.4 |                  17.9 |                   9   |                   20.3 |              10   |        7.1 |                        5   |
-| pkd-MaxVitUnet |        39.8 |                  40.2 |                  16.1 |                   19   |              11.8 |        5.2 |                        7   |
-| yolov8         |        87.6 |                  39   |                  24.5 |                   26.9 |              26   |       16.3 |                       24.2 |
+| pkd-DinoV2Up   |        34.9 |                  16.5 |                   9   |                   19.7 |               9.8 |        7.1 |                        4.8 |
+| pkd-MaxVitUnet |        37.3 |                  40.4 |                  17.8 |                   17.8 |              11.3 |        5   |                        4.9 |
+| yolo26s        |        28.9 |                  89.1 |                  21.8 |                   41.5 |              11.3 |        7.7 |                        4.1 |
+| yolov8         |        34.5 |                  60   |                  20.9 |                   56.4 |              13.2 |       10.9 |                        5.9 |
 
 **median keypoint distance**
 
 | model          |   AP10K_512 |   ARTF_Shorts_Dataset |   ARTF_Towels_Dataset |   ARTF_Tshirts_Dataset |   CUB200_2011_512 |   GITW_256 |   RoboflowGarlic256Dataset |
 |:---------------|------------:|----------------------:|----------------------:|-----------------------:|------------------:|-----------:|---------------------------:|
-| pkd-DinoV2Up   |        12.4 |                   3.9 |                   1.9 |                    3.4 |               6.5 |        2.9 |                        3   |
-| pkd-MaxVitUnet |        13.9 |                   6.5 |                   1.2 |                    2.8 |               6.9 |        2.2 |                        3.5 |
-| yolov8         |        23.3 |                  20.6 |                   9.1 |                   12.8 |               9.8 |        6.2 |                       10.2 |
+| pkd-DinoV2Up   |        12.2 |                   3.8 |                   1.8 |                    3.4 |               6.4 |        3   |                        3   |
+| pkd-MaxVitUnet |        13   |                   7.7 |                   1.3 |                    2.8 |               6.7 |        2.1 |                        3.1 |
+| yolo26s        |        15.2 |                  46.9 |                   7.3 |                   13.3 |               7.9 |        4.7 |                        3.2 |
+| yolov8         |        20.2 |                  32.8 |                   8.7 |                   22.5 |               9.5 |        7.3 |                        4.9 |
 
 Numbers are produced by `kp_2d_benchmark/eval/calculate_all_metrics.py` from the result files in
 `data/results/`, and are reproducible: the training uses a fixed seed, and re-running a model on an
 unchanged dataset reproduces its result file.
 
-The `keypoint-detection` submodule is pinned, because the backbone that produced an earlier version of
-these numbers was renamed and changed upstream while the parent repo pointed at a commit that did not
-contain it at all. Keep it pinned when updating results.
+The yolo rows are `yolov8s-pose` and `yolo26s-pose`, both finetuned under the pinned ultralytics version.
+
+### Two pinned dependencies
+
+Both have already produced mislabeled numbers, so keep them pinned when updating results:
+
+- The **`keypoint-detection` submodule**, because the backbone that produced an earlier version of these
+  numbers was renamed and changed upstream while the parent repo pointed at a commit that did not contain
+  it at all.
+- **`ultralytics`**, because the version changes yolo results in both directions. Going from 8.3.58 to
+  8.4.120 moved AP-10K mean distance from 87.6 to 35.6 and CUB from 26.0 to 13.5, but ARTF tshirts from
+  26.9 to 55.0.
+
+### Known weak spots in the table
+
+- **ARTF_Shorts is poor for both yolo models** (median 32.8 and 46.9). It is the smallest training split in
+  the benchmark, so at 100 epochs and batch 16 it gets only ~600 optimiser steps, against ~57,000 for
+  AP-10K. The budget is specified in epochs, so it scales with dataset size; these cells are likely
+  undertrained rather than genuinely hard.
+- **`yolo26s` detects nothing in 21% of the ARTF_Tshirts test set** (315/400). Since images without a
+  prediction are skipped, that cell is computed on the images the model did find.
 
 
 ## Local Development

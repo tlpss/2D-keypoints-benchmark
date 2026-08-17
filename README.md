@@ -38,14 +38,75 @@ deliberately out of scope for now. Adding it requires a ground-truth-to-predicti
 implementations would have to emit more than one instance per image. Any genuinely crowded dataset
 (ApolloCar3D, OCHuman, ...) needs that work first.
 
-**Distances are in raw pixels.** The reported distances are not normalised by object or image size, so they
-are only directly comparable between datasets of equal resolution.
+**Distances are in raw pixels.** The raw-pixel distance columns are not normalised by object or image size,
+so they are only directly comparable between datasets of equal resolution. The normalised metrics defined
+below do not have this problem.
 
-**Images without a prediction are skipped.** If a model detects nothing in an image, that image does not
-contribute to the distance metrics rather than being penalised, so the metrics are not detection-aware.
+**Images without a prediction are skipped by the raw-pixel distances.** If a model detects nothing in an
+image, that image does not contribute to the distance columns rather than being penalised. The other
+metrics each state their own policy, and three of the five are detection-aware.
+
+
+## Metrics
+
+All metrics are computed against the test split from the COCO-format result files in `data/results/`, by
+`kp_2d_benchmark/eval/calculate_all_metrics.py`. No metric requires anything beyond the predicted keypoints
+and their confidences, so the whole table can be regenerated without retraining.
+
+### Shared conventions
+
+- **Object scale.** `s = max(bbox_width, bbox_height)` of the ground-truth annotation. Every dataset is
+  required to carry bounding boxes (see the dataset invariants), so `s` is always defined. Normalising by
+  `s` is what makes the metrics comparable across datasets of different resolution.
+- **Visibility.** Keypoints annotated `v = 0` (not in view) are excluded everywhere. `v = 1` (labelled but
+  occluded) and `v = 2` (visible) both count.
+- **Single instance.** At most one ground-truth annotation and one predicted instance per image, matched by
+  `image_id`. See the scope section above.
+- **Missing predictions.** Each metric states its own policy. This is deliberate rather than an oversight:
+  a localisation metric that conditions on detection and a task metric that penalises it answer different
+  questions, and reporting the detection rate next to both keeps the conditioning visible.
+
+### The five reported metrics
+
+**Detection rate.** Percentage of test images for which the model emitted any prediction. Not a quality
+measure on its own; it is the denominator context for everything else, and without it a model that only
+reports the images it finds easy looks better than it is.
+
+**Median NME** (normalised mean error). Median over all visible keypoints of `||p - g||₂ / s`. Median
+rather than mean because the error distribution has a heavy tail, and a handful of gross failures otherwise
+dominate the average. Computed over detected images only, so it must be read together with the detection
+rate.
+
+**PCK@0.05.** Percentage of visible keypoints whose prediction lies within `0.05 · s` of the ground truth.
+Missing predictions count as incorrect, so this metric is detection-aware. `α = 0.05` is used because
+`α = 0.1` saturates on most datasets in this benchmark and stops separating models; 0.1 is the more common
+value in the literature and is easy to add as a second column if a comparison calls for it. Note that
+AP-10K crops are the bounding box plus a 25% margin, so `s` is nearly constant there (~410 px) and
+PCK@0.05 on that dataset is effectively a fixed 20 px threshold.
+
+**Strict success@0.05.** Percentage of test images in which *every* visible keypoint is within `0.05 · s`.
+Images without a prediction count as failures. This is the task-level view: per-keypoint PCK is optimistic
+whenever the downstream application needs the whole keypoint configuration to be right, and the two can
+differ by a lot on datasets with many keypoints.
+
+**mAP.** COCO keypoint average precision over OKS thresholds `0.50:0.05:0.95`, computed with `pycocotools`.
+Because no category in this benchmark is human, there is no published set of per-keypoint OKS sigmas, so a
+uniform `σ = 0.05` is used for every keypoint of every dataset, and the OKS object scale is taken as
+`bbox_width · bbox_height`. Detection failures are handled as recall, and the confidence scores enter
+through the precision-recall ranking, which no other metric in the table uses.
+
+`σ` is a benchmark constant in exactly the way the pinned dependencies are: changing it changes every mAP
+number, so it must not be varied within a table.
+
+The raw-pixel mean and median keypoint distance are kept in `metrics.csv` for continuity with earlier
+versions of this table, but are no longer the headline numbers.
 
 
 ## Performance numbers
+
+> The metrics defined above are specified but not yet implemented: the tables below still report the
+> legacy raw-pixel distances. They are regenerated from the existing result files, without retraining,
+> once the evaluation code lands.
 
 **average keypoint distance**
 

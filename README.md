@@ -91,17 +91,22 @@ whenever the downstream application needs the whole keypoint configuration to be
 differ by a lot on datasets with many keypoints.
 
 **mAP.** Mean average precision as implemented in the pinned `keypoint-detection` submodule
-(`keypoint_detection.models.metrics.KeypointAPMetrics`). This is a distance-threshold AP, not COCO OKS. A
+(`keypoint_detection.models.metrics.KeypointAPMetric`). This is a distance-threshold AP, not COCO OKS. A
 detection counts as a true positive when it falls within a threshold distance of a ground-truth keypoint of
 the same type; detections are matched greedily in order of confidence, unmatched ground truth counts as a
 false negative and unmatched detections as false positives. AP is computed per keypoint channel over the
-whole test split, then averaged over channels and over thresholds. Confidence scores enter through the
-precision-recall ranking, which no other metric in the table uses.
+whole test split and then averaged over the channels, which is the mean in mAP. Confidence scores enter
+through the precision-recall ranking, which no other metric in the table uses.
 
-Thresholds are normalised by dividing keypoint coordinates by `s` before matching, so a threshold is an `α`
-rather than a pixel count, and `α ∈ {0.02, 0.05}` is used. This is the only deviation from the submodule's
-own configuration, which uses raw pixel thresholds (default `2 4`); the matching and AP computation are
+The threshold is normalised by dividing keypoint coordinates by `s` before matching, so it is an `α` rather
+than a pixel count, and a single `α = 0.05` is used. This is the only deviation from the submodule's own
+configuration, which uses raw pixel thresholds (default `2 4`); the matching and AP computation are
 untouched.
+
+Sharing `α` with PCK@0.05 is deliberate: both metrics call a keypoint correct under exactly the same
+criterion, so the pair isolates what AP adds. PCK is the unweighted fraction of correct keypoints, while
+mAP weights the same events by confidence rank and charges for false positives. A model whose confidences
+order its predictions well scores higher on mAP than its PCK alone would suggest, and vice versa.
 
 The AP here is not numerically identical to the `test/meanAP` that the keypoint-detection training loop
 logs, even at the same pixel thresholds. The result files store only the highest-scoring detection per

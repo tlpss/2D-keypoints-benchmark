@@ -58,8 +58,9 @@ and their confidences, so the whole table can be regenerated without retraining.
 - **Object scale.** `s = max(bbox_width, bbox_height)` of the ground-truth annotation. Every dataset is
   required to carry bounding boxes (see the dataset invariants), so `s` is always defined. Normalising by
   `s` is what makes the metrics comparable across datasets of different resolution.
-- **Visibility.** Keypoints annotated `v = 0` (not in view) are excluded everywhere. `v = 1` (labelled but
-  occluded) and `v = 2` (visible) both count.
+- **Visibility.** Keypoints annotated `v = 0` (not in view) are excluded from the first four metrics.
+  `v = 1` (labelled but occluded) and `v = 2` (visible) both count. mAP is the exception and treats a
+  prediction for an out-of-view keypoint as a false positive; see its entry below.
 - **Single instance.** At most one ground-truth annotation and one predicted instance per image, matched by
   `image_id`. See the scope section above.
 - **Missing predictions.** Each metric states its own policy. This is deliberate rather than an oversight:
@@ -89,14 +90,28 @@ Images without a prediction count as failures. This is the task-level view: per-
 whenever the downstream application needs the whole keypoint configuration to be right, and the two can
 differ by a lot on datasets with many keypoints.
 
-**mAP.** COCO keypoint average precision over OKS thresholds `0.50:0.05:0.95`, computed with `pycocotools`.
-Because no category in this benchmark is human, there is no published set of per-keypoint OKS sigmas, so a
-uniform `σ = 0.05` is used for every keypoint of every dataset, and the OKS object scale is taken as
-`bbox_width · bbox_height`. Detection failures are handled as recall, and the confidence scores enter
-through the precision-recall ranking, which no other metric in the table uses.
+**mAP.** Mean average precision as implemented in the pinned `keypoint-detection` submodule
+(`keypoint_detection.models.metrics.KeypointAPMetrics`). This is a distance-threshold AP, not COCO OKS. A
+detection counts as a true positive when it falls within a threshold distance of a ground-truth keypoint of
+the same type; detections are matched greedily in order of confidence, unmatched ground truth counts as a
+false negative and unmatched detections as false positives. AP is computed per keypoint channel over the
+whole test split, then averaged over channels and over thresholds. Confidence scores enter through the
+precision-recall ranking, which no other metric in the table uses.
 
-`σ` is a benchmark constant in exactly the way the pinned dependencies are: changing it changes every mAP
-number, so it must not be varied within a table.
+Thresholds are normalised by dividing keypoint coordinates by `s` before matching, so a threshold is an `α`
+rather than a pixel count, and `α ∈ {0.02, 0.05}` is used. This is the only deviation from the submodule's
+own configuration, which uses raw pixel thresholds (default `2 4`); the matching and AP computation are
+untouched. Re-running with pixel thresholds reproduces the `test/meanAP` that the keypoint-detection
+training loop logs to wandb, which is a useful end-to-end check of the evaluation path.
+
+Unlike the other four metrics, mAP does not ignore keypoints annotated `v = 0`: the ground truth for that
+channel is empty, so a model that still emits a keypoint there takes a false positive. This is the
+behaviour of the submodule metric at training time, and it makes mAP the only metric here that rewards
+recognising that a keypoint is absent. It matters on AP-10K (41% of keypoint slots are out of view) and
+CUB-200 (20%); on the other five datasets fewer than 0.2% of slots are affected.
+
+Because the metric is the submodule's, the mAP column is tied to the submodule pin in the same way the
+backbone results are.
 
 The raw-pixel mean and median keypoint distance are kept in `metrics.csv` for continuity with earlier
 versions of this table, but are no longer the headline numbers.

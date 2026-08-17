@@ -164,6 +164,7 @@ def train_and_test_yolo_keypoints(train_name, dataset: DatasetContainer):
 
     # create temp yolo data.yaml file
     FILENAME = f"{datetime.now()}_data.yaml"
+
     create_yolo_kp_data_yaml(
         train_yolo_dataset_path, val_yolo_dataset_path, dataset.category_name, dataset.num_keypoints, FILENAME
     )
@@ -174,11 +175,15 @@ def train_and_test_yolo_keypoints(train_name, dataset: DatasetContainer):
 
         data = json.load(f)
         img_size = data["images"][0]["width"]
+    print("training")
     model.train(data=FILENAME, epochs=100, imgsz=img_size, name=yolo_train_name)
 
     # evaluate the model
-    # load best checkpoint
-    model = YOLO(f"{YOLO_LOG_DIR}/pose/{yolo_train_name}/weights/best.pt")
+    # load best checkpoint. ask the trainer where it saved instead of assuming YOLO_LOG_DIR:
+    # ultralytics does not always honour the runs_dir setting and then writes to ./runs.
+    best_checkpoint_path = model.trainer.best
+    print("Evaluating model")
+    model = YOLO(best_checkpoint_path)
 
     # set test dataset as val to evaluate
     create_yolo_kp_data_yaml(
@@ -197,7 +202,7 @@ def train_and_test_yolo_keypoints(train_name, dataset: DatasetContainer):
     print(all_aps)
 
     # create coco results file
-    results_path = DATA_DIR / "results" / f"{train_name}_results.json"
+    results_path = DATA_DIR / "results" / f"model=yolov8,dataset={dataset.__repr__()}.json"
     results_path.parent.mkdir(parents=True, exist_ok=True)
     create_coco_results_file(dataset, model, results_path)
 
@@ -215,34 +220,14 @@ def train_and_test_yolo_keypoints(train_name, dataset: DatasetContainer):
 
 
 if __name__ == "__main__":
-    import json
+    pass
 
-    from kp_2d_benchmark.datasets import ARTF_Tshirts_Dataset
-    from kp_2d_benchmark.eval.coco_results import CocoKeypointsDataset
+    from kp_2d_benchmark.datasets import CUB200_2011_512
 
     # dataset = RoboflowGarlic256Dataset()
     # train_name = "yolov8-roboflow_garlic256"
+    train_and_test_yolo_keypoints("yolov8-CUB200", CUB200_2011_512())
 
-    dataset = ARTF_Tshirts_Dataset()
-    train_name = "yolov8-artf_tshirts"
-    train_and_test_yolo_keypoints(train_name, dataset)
-
-    from kp_2d_benchmark.eval.calculate_keypoint_distance_metrics import (
-        calculate_average_distances,
-        calculate_keypoint_distances,
-    )
-
-    results_path = DATA_DIR / "results" / f"{train_name}_results.json"
-    results = COCOKeypointResults(json.load(open(results_path)))
-
-    coco_dataset = CocoKeypointsDataset(**json.load(open(dataset.json_test_path)))
-    distance_dict = calculate_keypoint_distances(coco_dataset, results)
-    average_distance_dict = calculate_average_distances(distance_dict)
-
-    print(train_name)
-    print(average_distance_dict)
-
-    key = list(average_distance_dict.keys())[0]
-    avg_distances = list(average_distance_dict[key].values())
-    print(avg_distances)
-    print(f"Average distance: {sum(avg_distances)/len(avg_distances)}")
+    # for dataset in DATASETS:
+    #     train_name = f"yolv8-{dataset.__repr__()}"
+    #     train_and_test_yolo_keypoints(train_name, dataset)

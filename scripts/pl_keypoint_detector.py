@@ -2,11 +2,14 @@ import json
 from argparse import ArgumentParser
 from pathlib import Path
 
+import wandb
 from keypoint_detection.tasks.train import train
+from keypoint_detection.utils.path import get_wandb_log_dir_path
+from tqdm import tqdm
 
 from kp_2d_benchmark import DATA_DIR
 from kp_2d_benchmark.datasets.base import DatasetContainer
-from kp_2d_benchmark.eval.coco_results import COCOKeypointResult, COCOKeypointResults, CocoKeypointsDataset
+from kp_2d_benchmark.eval.coco_results import COCOKeypointResult, COCOKeypointResults
 
 COMMAND = "keypoint-detection train  --augment_train"
 
@@ -14,26 +17,28 @@ COMMAND = "keypoint-detection train  --augment_train"
 DEFAULT_DICT = {
     "keypoint_channel_configuration": None,
     "accelerator": "gpu",
-    "ap_epoch_freq": 1,
+    "ap_epoch_freq": 2,
     "check_val_every_n_epoch": 1,
+    # "backbone_type": "DinoV2Linear",
     "backbone_type": "MaxVitUnet",
     "devices": 1,
     "early_stopping_relative_threshold": -1,
     "json_dataset_path": "",
     "json_test_dataset_path": "",
     "json_validation_dataset_path": "",
-    "max_epochs": 50,
-    "maximal_gt_keypoint_pixel_distances": "4 8 16",
+    "max_epochs": 150,  # TOOD: max steps instead of max keypoints?
+    "maximal_gt_keypoint_pixel_distances": "2 4 8",
     "minimal_keypoint_extraction_pixel_distance": 4,
     "precision": 16,
     "seed": 2024,
-    "heatmap_sigma": 4,
-    "learning_rate": 0.0003,
+    "heatmap_sigma": 2,
+    "learning_rate": 0.0002,
     "batch_size": 8,
     ###
-    # "wandb_entity": "tlips",
+    "wandb_entity": None,
     "wandb_project": "kp-benchmark",
     "wandb_name": None,
+    "augment_train": True,
 }
 
 
@@ -89,7 +94,7 @@ def create_coco_results_file(dataset: DatasetContainer, model, results_path):
     # start timer
     start = datetime.datetime.now()
 
-    for image in data["images"]:
+    for image in tqdm(data["images"]):
         # create absolute path
         image_path = Path(dataset.json_test_path).parent / image["file_name"]
         # load the image
@@ -171,6 +176,21 @@ def train_and_test(train_name, dataset: DatasetContainer):
     channel_config = keypoints
     arg_dict["keypoint_channel_configuration"] = channel_config
 
+    if "cub" in (dataset.__repr__().lower()):
+        arg_dict["max_epochs"] = 40
+        # TODO: specify # steps instead of # epochs
+    if "ap10k" in (dataset.__repr__().lower()):
+        # ~9.1k train samples vs ~5.4k for cub, scaled down to keep the number of steps comparable.
+        arg_dict["max_epochs"] = 24
+
+    wandb.init(
+        name=arg_dict["wandb_name"],
+        project=arg_dict["wandb_project"],
+        entity=arg_dict["wandb_entity"],
+        config=arg_dict,
+        dir=get_wandb_log_dir_path(),  # dir should already exist! will fallback to /tmp and not log images otherwise..
+    )
+
     model, trainer = train_dector_from_dict(arg_dict)
     # get the best checkpoint from the trainer
     ckpt_path = trainer.checkpoint_callback.best_model_path
@@ -178,39 +198,22 @@ def train_and_test(train_name, dataset: DatasetContainer):
     model = load_from_checkpoint(ckpt_path)
     model.eval()
 
-    results_path = DATA_DIR / "results" / f"{train_name}_results.json"
+    results_path = DATA_DIR / "results" / f"model=pkd-{arg_dict['backbone_type']},dataset={dataset.__repr__()}.json"
     create_coco_results_file(dataset, model, results_path)
+
+    wandb.finish()
 
 
 if __name__ == "__main__":
-    from kp_2d_benchmark.datasets.artf import ARTF_Tshirts_Dataset
+    from kp_2d_benchmark.datasets import DATASETS
 
     # dataset = RoboflowGarlic256Dataset()
     # train_name = "pkd-maxvit-roboflow_garlic256"
-
-    dataset = ARTF_Tshirts_Dataset()
-    train_name = "pkd-maxvit-artf_tshirts"
-
+    # dataset = CUB200_2011_512()
+    # train_name = "pkd-dinov2-cub200"
+    # train_and_test(train_name,dataset)
     # dataset.download()
 
-    train_and_test(train_name, dataset)
-
-    from kp_2d_benchmark.eval.calculate_keypoint_distance_metrics import (
-        calculate_average_distances,
-        calculate_keypoint_distances,
-    )
-
-    results_path = DATA_DIR / "results" / f"{train_name}_results.json"
-    results = COCOKeypointResults(json.load(open(results_path)))
-
-    coco_dataset = CocoKeypointsDataset(**json.load(open(dataset.json_test_path)))
-    distance_dict = calculate_keypoint_distances(coco_dataset, results)
-    average_distance_dict = calculate_average_distances(distance_dict)
-
-    print(train_name)
-    print(average_distance_dict)
-
-    key = list(average_distance_dict.keys())[0]
-    avg_distances = list(average_distance_dict[key].values())
-    print(avg_distances)
-    print(f"Average distance: {sum(avg_distances)/len(avg_distances)}")
+    for dataset in DATASETS:
+        train_name = f"pkd-dinov2-{dataset.__repr__()}"
+        train_and_test(train_name, dataset)

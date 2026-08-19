@@ -1,3 +1,15 @@
+"""Keypoint distance metrics for the benchmark.
+
+These metrics are single instance only: predictions are matched to ground truth by image_id, and an image
+with more than one annotation is rejected rather than handled. Multi-instance evaluation is out of scope
+for now, see the "Scope and limitations" section of the README. Supporting it needs a ground truth to
+prediction assignment step (e.g. Hungarian matching on OKS) and a policy for unmatched instances, and both
+create_coco_results_file implementations would have to emit more than one instance per image.
+
+Every dataset in DATASETS satisfies the single instance assumption, by construction where needed: AP-10K is
+cropped per instance and GITW is published as one crop per glass.
+"""
+
 from kp_2d_benchmark.eval.coco_results import COCOKeypointResults, CocoKeypointsDataset
 
 
@@ -14,17 +26,25 @@ def calculate_keypoint_distances(coco_dataset: CocoKeypointsDataset, coco_result
 
     category_id_to_category = {category.id: category for category in coco_dataset.categories}
 
-    # first check if for each image, there is max one annotation
+    # first check if for each image, there is max one annotation.
+    # this is a hard requirement, not a sanity check: without instance matching there is no way to tell
+    # which annotation a prediction belongs to. see the module docstring.
     image_id_to_annotations = {}
     for annotation in coco_dataset.annotations:
         if annotation.image_id in image_id_to_annotations:
-            raise ValueError(f"Image {annotation.image_id} has multiple annotations.")
+            raise ValueError(
+                f"Image {annotation.image_id} has multiple annotations, but these metrics are single "
+                "instance only. Multi-instance evaluation is out of scope, see the module docstring."
+            )
         image_id_to_annotations[annotation.image_id] = annotation
 
     image_id_to_predictions = {}
     for prediction in coco_results:
         if prediction.image_id in image_id_to_predictions:
-            raise ValueError(f"Image {prediction.image_id} has multiple predictions.")
+            raise ValueError(
+                f"Image {prediction.image_id} has multiple predictions, but these metrics are single "
+                "instance only. Multi-instance evaluation is out of scope, see the module docstring."
+            )
         image_id_to_predictions[prediction.image_id] = prediction
 
     # then for each annotation, find the prediction

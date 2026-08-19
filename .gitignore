@@ -7,3 +7,5 @@
 **.ckpt
 **.pyc
 **/build/
+**.pt
+runs/

@@ -139,6 +139,8 @@ better. Column labels abbreviate the dataset names of the table at the top of th
 | model           |    AP-10K |    Shorts |    Towels |   Tshirts |   CUB-200 |      GITW |    Garlic |
 |:----------------|----------:|----------:|----------:|----------:|----------:|----------:|----------:|
 | Molmo-7B-D-0924 |         — | **100.0** |      98.8 | **100.0** |         — |         — | **100.0** |
+| fsk-dinov3-s    | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** |
+| fsk-radiov2-b   | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** |
 | pkd-DinoV2Up    | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** |
 | pkd-MaxVitUnet  | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** |
 | yolo26s         |      99.5 |      95.6 |      92.5 |      78.8 |      99.5 |      99.4 |      99.5 |
@@ -149,6 +151,8 @@ better. Column labels abbreviate the dataset names of the table at the top of th
 | model           |    AP-10K |    Shorts |    Towels |   Tshirts |   CUB-200 |      GITW |    Garlic |
 |:----------------|----------:|----------:|----------:|----------:|----------:|----------:|----------:|
 | Molmo-7B-D-0924 |         — |     0.388 |     0.093 |     0.429 |         — |         — |     0.246 |
+| fsk-dinov3-s    |     0.159 |     0.522 |     0.134 |     0.438 |     0.054 |     0.067 |     0.111 |
+| fsk-radiov2-b   |     0.170 |     0.505 |     0.109 |     0.393 |     0.060 |     0.063 |     0.081 |
 | pkd-DinoV2Up    | **0.024** | **0.019** |     0.010 |     0.015 | **0.018** |     0.014 |     0.027 |
 | pkd-MaxVitUnet  |     0.026 |     0.026 | **0.007** | **0.013** | **0.018** | **0.011** | **0.026** |
 | yolo26s         |     0.032 |     0.287 |     0.041 |     0.065 |     0.021 |     0.021 |     0.030 |
@@ -159,6 +163,8 @@ better. Column labels abbreviate the dataset names of the table at the top of th
 | model           |   AP-10K |   Shorts |   Towels |   Tshirts |   CUB-200 |     GITW |   Garlic |
 |:----------------|---------:|---------:|---------:|----------:|----------:|---------:|---------:|
 | Molmo-7B-D-0924 |        — |      4.3 |     22.6 |       6.1 |         — |        — |     13.1 |
+| fsk-dinov3-s    |     20.8 |     21.5 |     49.8 |      21.0 |      46.6 |     43.3 |     27.9 |
+| fsk-radiov2-b   |     19.9 |     25.4 |     58.1 |      25.2 |      44.5 |     44.8 |     35.3 |
 | pkd-DinoV2Up    | **68.0** | **71.4** | **88.7** |  **78.2** |  **87.8** |     88.8 | **81.4** |
 | pkd-MaxVitUnet  |     65.0 |     54.6 |     79.3 |      77.6 |      84.9 | **92.1** |     78.4 |
 | yolo26s         |     63.8 |      7.4 |     56.3 |      30.3 |      83.4 |     83.1 | **81.4** |
@@ -169,6 +175,8 @@ better. Column labels abbreviate the dataset names of the table at the top of th
 | model           |   AP-10K |   Shorts |   Towels |   Tshirts |   CUB-200 |     GITW |   Garlic |
 |:----------------|---------:|---------:|---------:|----------:|----------:|---------:|---------:|
 | Molmo-7B-D-0924 |        — |      0.0 |      2.0 |       0.0 |         — |        — |      1.0 |
+| fsk-dinov3-s    |      0.5 |      0.8 |     15.7 |       0.2 |       0.0 |      2.7 |      7.1 |
+| fsk-radiov2-b   |      0.5 |      1.1 |     28.2 |       0.1 |       0.0 |      1.2 |      9.1 |
 | pkd-DinoV2Up    |     11.4 | **19.4** | **73.8** |  **24.8** |  **24.7** |     60.0 | **65.8** |
 | pkd-MaxVitUnet  |      9.4 |     11.7 |     50.7 |      22.2 |      18.7 | **74.5** |     58.3 |
 | yolo26s         | **12.8** |      0.0 |     26.2 |       0.2 |      17.9 |     46.8 |     65.3 |
@@ -179,6 +187,8 @@ better. Column labels abbreviate the dataset names of the table at the top of th
 | model           |    AP-10K |    Shorts |    Towels |   Tshirts |   CUB-200 |      GITW |    Garlic |
 |:----------------|----------:|----------:|----------:|----------:|----------:|----------:|----------:|
 | Molmo-7B-D-0924 |         — |     0.004 |     0.065 |     0.009 |         — |         — |     0.031 |
+| fsk-dinov3-s    |     0.073 |     0.102 |     0.311 |     0.110 |     0.263 |     0.307 |     0.144 |
+| fsk-radiov2-b   |     0.063 |     0.119 |     0.417 |     0.146 |     0.248 |     0.337 |     0.204 |
 | pkd-DinoV2Up    | **0.559** | **0.627** | **0.850** | **0.728** | **0.790** |     0.867 |     0.717 |
 | pkd-MaxVitUnet  |     0.537 |     0.439 |     0.699 |     0.726 |     0.760 | **0.904** |     0.694 |
 | yolo26s         |     0.470 |     0.010 |     0.407 |     0.142 |     0.713 |     0.785 | **0.719** |
@@ -189,10 +199,12 @@ Numbers are produced by `kp_2d_benchmark/eval/calculate_all_metrics.py` from the
 unchanged dataset reproduces its result file.
 
 The yolo rows are `yolov8s-pose` and `yolo26s-pose`, both finetuned under the pinned ultralytics version.
+The `fsk-` rows are one-shot and are means over five support sets rather than single runs; see below.
 
-### Two pinned dependencies
+### Three pinned dependencies
 
-Both have already produced mislabeled numbers, so keep them pinned when updating results:
+All three sit outside this repository and decide what the numbers are. Two of them have already produced
+mislabeled numbers, so keep them pinned when updating results:
 
 - The **`keypoint-detection` submodule**, because the backbone that produced an earlier version of these
   numbers was renamed and changed upstream while the parent repo pointed at a commit that did not contain
@@ -200,6 +212,11 @@ Both have already produced mislabeled numbers, so keep them pinned when updating
 - **`ultralytics`**, because the version changes yolo results in both directions. Going from 8.3.58 to
   8.4.120 moved AP-10K mean distance from 87.6 to 35.6 and CUB from 26.0 to 13.5, but ARTF tshirts from
   26.9 to 55.0.
+- The **`few-shot-keypoints` submodule**, which produces the `fsk-` rows. Its pin is currently weaker than
+  the other two: the `uv.lock` committed at the pinned commit is stale relative to its own
+  `pyproject.toml`, so `uv sync` re-resolves the environment rather than replaying it, and RADIO's
+  modelling code is fetched unpinned through `trust_remote_code`. The versions the published rows were
+  produced with are written down in the docstring of `scripts/few_shot_matching.py`.
 
 ### Known weak spots in the table
 
@@ -207,7 +224,8 @@ Both have already produced mislabeled numbers, so keep them pinned when updating
   single image with all keypoints correct). It is the smallest training split in the benchmark, so at 100
   epochs and batch 16 it gets only ~600 optimiser steps, against ~57,000 for AP-10K. The budget is
   specified in epochs, so it scales with dataset size; these cells are likely undertrained rather than
-  genuinely hard.
+  genuinely hard. The one-shot rows, which do no training at all, beat both of them on this dataset
+  (21.5 and 25.4 PCK), which is hard to explain any other way.
 - **`yolo26s` detects nothing in 21% of the ARTF_Tshirts test set**, which is what its detection rate of
   78.8 reports. Those images are counted as failures by PCK, strict success and mAP, but are still skipped
   by the raw pixel distances in `metrics.csv`.
@@ -218,6 +236,57 @@ Both have already produced mislabeled numbers, so keep them pinned when updating
   predicting a keypoint that is out of view, and 41% respectively 20% of their keypoint slots are. Both
   model families always emit every keypoint channel, so both pay for it.
 
+
+### The one-shot feature-matching rows
+
+`fsk-dinov3-s` and `fsk-radiov2-b` come from the `few-shot-keypoints` submodule via
+`scripts/few_shot_matching.py`, and are the data-efficiency axis of the table. Nothing is trained: a
+frozen ViT turns an image into a dense per-pixel feature map, **one** reference feature vector per
+keypoint is sliced out of a single annotated train image, and the prediction is the argmax of the cosine
+similarity against that vector. The backbones are `facebook/dinov3-vits16-pretrain-lvd1689m` and
+`nvidia/C-RADIOv2-B`. Matching happens on the annotation's bounding box plus a 10% margin, padded square
+and resized to 512x512, with the match mapped back to the original frame.
+
+So the supervision is one annotated point per keypoint, against the 83-9122 training images the finetuned
+rows use. That buys about a third to a half of the trained models' PCK: 20-58 against 55-92. It is
+comfortably ahead of the zero-shot VLM everywhere the two overlap (Molmo manages 4.3-22.6), and on
+ARTF_Shorts both one-shot rows beat both yolo rows outright, which is further evidence that those two
+cells are undertrained rather than hard.
+
+**These rows are means over five support sets, and the spread is large.** Which train image happens to
+supply the reference point is chosen by a seed, so a single run is not a stable number. Every
+configuration is run at seeds 2025-2029, the per-seed files go to `data/results/few-shot-seeds/`, and
+`kp_2d_benchmark/eval/aggregate_seed_metrics.py` averages the *metrics* over them.
+`metrics_seed_spread.csv` holds the standard deviations:
+
+**pck@0.05, mean ± standard deviation over the five support sets**
+
+| model         |     AP-10K |     Shorts |      Towels |    Tshirts |    CUB-200 |        GITW |     Garlic |
+|:--------------|-----------:|-----------:|------------:|-----------:|-----------:|------------:|-----------:|
+| fsk-dinov3-s  | 20.8 ± 5.4 | 21.5 ± 2.8 | 49.8 ± 13.5 | 21.0 ± 6.7 | 46.6 ± 2.6 | 43.3 ± 15.2 | 27.9 ± 6.8 |
+| fsk-radiov2-b | 19.9 ± 5.0 | 25.4 ± 3.9 | 58.1 ± 12.6 | 25.2 ± 7.1 | 44.5 ± 2.8 | 44.8 ± 13.6 | 35.3 ± 4.2 |
+
+**mAP@0.05, mean ± standard deviation over the five support sets**
+
+| model         |        AP-10K |        Shorts |        Towels |       Tshirts |       CUB-200 |          GITW |        Garlic |
+|:--------------|--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|--------------:|
+| fsk-dinov3-s  | 0.073 ± 0.029 | 0.102 ± 0.016 | 0.311 ± 0.142 | 0.110 ± 0.051 | 0.263 ± 0.026 | 0.307 ± 0.141 | 0.144 ± 0.051 |
+| fsk-radiov2-b | 0.063 ± 0.026 | 0.119 ± 0.025 | 0.417 ± 0.180 | 0.146 ± 0.058 | 0.248 ± 0.021 | 0.337 ± 0.132 | 0.204 ± 0.040 |
+
+A standard deviation of 13-15 PCK points on Towels and GITW is as large as the gap between the two
+backbones on most datasets, so read differences between `fsk-dinov3-s` and `fsk-radiov2-b` with that in
+mind. RADIOv2-B is ahead on five of seven datasets, but only on Towels and Garlic by more than one sigma.
+
+Three caveats specific to how these rows are produced:
+
+- **They use the ground-truth bounding box at test time**, so they assume a perfect detector. AP-10K
+  already bakes that in, since it is cropped per instance, but the other six datasets do not. These rows
+  are therefore comparable to the trained models on localisation, not on detection.
+- **Detection rate is 100% by construction**, since an argmax always returns a pixel. That column carries
+  no information for these two rows, unlike for the yolo and Molmo rows where it is the interesting
+  failure mode.
+- **The confidence is a raw cosine similarity**, which sits in a narrow band around 0.9 and barely
+  separates a good match from a bad one, so the ranking component of their mAP is weak.
 
 ### The zero-shot VLM row
 
@@ -279,9 +348,15 @@ Two caveats on how these rows should be read:
 
 ### Local installation
 
-- clone this repo
+- clone this repo, with its submodules: `git clone --recurse-submodules`, or `git submodule update
+  --init` in an existing clone
 - create the conda environment `conda env create -f environment.yaml`
 - initialize the pre-commit hooks `pre-commit install`
+
+The `few-shot-keypoints` submodule needs an environment of its own -- it requires transformers 5 and torch
+2.7, which conflict with the pinned versions the other rows depend on. Build it with `uv sync` inside the
+submodule; `scripts/few_shot_matching.py` documents how to invoke it and which versions the published rows
+were produced with. Nothing else in the repo needs it.
 
 
 ### Running formatting, linting and testing

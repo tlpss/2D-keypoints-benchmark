@@ -133,9 +133,9 @@ def get_metrics(file_path: str) -> Dict[str, object]:
     }
 
 
-def write_metrics_csv(rows: List[Dict[str, object]], metric_csv_path: str) -> None:
+def write_metrics_csv(rows: List[Dict[str, object]], metric_csv_path: str, fieldnames: List[str] = None) -> None:
     with open(metric_csv_path, "w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS)
+        writer = csv.DictWriter(f, fieldnames=fieldnames or CSV_FIELDS)
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
@@ -191,10 +191,14 @@ def format_results_csv_as_markdown_table(metric_csv_path: str, metrics: Dict[str
 
 
 if __name__ == "__main__":
+    # imported here rather than at module level: `aggregate_seed_metrics` imports this module for
+    # `get_metrics`, so importing it back at the top would be a cycle.
     from kp_2d_benchmark import DATA_DIR
+    from kp_2d_benchmark.eval.aggregate_seed_metrics import SEED_RESULTS_SUBDIR, aggregate_seed_rows
 
     results_dir = DATA_DIR / "results"
     metric_csv_path = "metrics.csv"
+    spread_csv_path = "metrics_seed_spread.csv"
 
     rows = []
     for file in sorted(os.listdir(results_dir)):
@@ -202,7 +206,19 @@ if __name__ == "__main__":
             file = os.path.join(results_dir, file)
             rows.append(get_metrics(file))
             print(f"metrics for {os.path.basename(file)} done")
+    n_single_run_rows = len(rows)
+
+    # models that are run once per random seed live one directory down, and contribute the mean over
+    # their seeds. see kp_2d_benchmark/eval/aggregate_seed_metrics.py.
+    mean_rows, spread_rows = aggregate_seed_rows(str(results_dir / SEED_RESULTS_SUBDIR))
+    rows.extend(mean_rows)
 
     write_metrics_csv(rows, metric_csv_path)
-    print(f"Metrics for {len(rows)} result files saved to {metric_csv_path}\n")
+    print(
+        f"Metrics for {n_single_run_rows} result files and {len(mean_rows)} seed-averaged rows "
+        f"saved to {metric_csv_path}\n"
+    )
+    if spread_rows:
+        write_metrics_csv(spread_rows, spread_csv_path, fieldnames=["model", "dataset", "n_seeds", *METRIC_FORMATTERS])
+        print(f"Standard deviation over the seeds saved to {spread_csv_path}\n")
     print(format_results_csv_as_markdown_table(metric_csv_path))

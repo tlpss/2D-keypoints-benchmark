@@ -4,3 +4,6 @@
 [submodule "keypoint-detection"]
 	path = keypoint-detection
 	url = https://github.com/tlpss/keypoint-detection.git
+[submodule "few-shot-keypoints"]
+	path = few-shot-keypoints
+	url = https://github.com/tlpss/few-shot-keypoints.git

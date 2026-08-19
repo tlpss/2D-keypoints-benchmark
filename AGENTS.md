@@ -35,6 +35,12 @@ not declared there. `ultralytics` is pinned, deliberately (see below).
   transformers cannot pull a different torch into the environment the pinned rows depend on; the result
   file is the only interface. See its module docstring for the venv and the two things the result format
   cannot express for a VLM.
+- `scripts/few_shot_matching.py` — one-shot baseline over the `few-shot-keypoints` submodule. Same
+  arrangement as molmo: its own venv, result file as the only interface. It is the only model that is run
+  more than once per dataset, so it writes to `data/results/few-shot-seeds/` and is collapsed to one row
+  by `kp_2d_benchmark/eval/aggregate_seed_metrics.py`. **Do not name a script after a package it
+  imports** — an earlier `scripts/few_shot_keypoints.py` shadowed the `few_shot_keypoints` package,
+  because python puts the script's own directory first on `sys.path`.
 - `data/` — **entirely gitignored** (`data/.gitignore` is `**`). Datasets, results and run logs all live here
   and are never committed. Only `metrics.csv` at the repo root and the README tables are tracked.
 
@@ -56,6 +62,13 @@ not declared there. `ultralytics` is pinned, deliberately (see below).
   `image_id` alone and raise on a second annotation. Multi-instance evaluation is deliberately out of
   scope; see the docstring of `kp_2d_benchmark/eval/calculate_keypoint_distance_metrics.py`. AP-10K is
   cropped per instance for exactly this reason.
+
+  Note that this is only *enforced* on the test split, which is the only one the metrics read. Two known
+  train splits violate it and nothing complains: RoboFlow Garlic train has 699 annotations for 697 images,
+  and CUB train annotation 5007 declares `num_keypoints: 8` against 7 flagged keypoints, which the
+  stricter COCO parser in `few-shot-keypoints` rejects outright. `filtered_coco_json` in
+  `scripts/few_shot_matching.py` repairs both on the fly. A model that trains on a train split may hit
+  them too.
 - **One category, matching `DatasetContainer.category_name`.** `num_keypoints` resolves keypoints by
   matching that name against the `categories` list. Multi-category sources must be collapsed or split.
 - **Bounding boxes present.** `coco_instances_to_yolo` unpacks `annotation.bbox` and crashes without one.
@@ -75,7 +88,24 @@ python kp_2d_benchmark/eval/calculate_all_metrics.py
 ```
 
 It rewrites `metrics.csv` from every `.json` directly in `data/results/` (subdirectories are skipped, which
-is how superseded results are archived).
+is how superseded results are archived, and how `dry-run/` keeps a `--limit` smoke test from becoming a
+published number).
+
+One subdirectory is not skipped but *aggregated*: `data/results/few-shot-seeds/`, whose files carry a third
+field, `model=<label>,dataset=<DatasetRepr>,seed=<seed>.json`. The seed goes last on purpose, so that
+`parse_result_file_name` still reads the model and dataset out of a seed file unchanged.
+`aggregate_seed_metrics.py` computes the metrics per seed with the ordinary `get_metrics` and contributes
+one mean row per (model, dataset), plus a standard deviation row to `metrics_seed_spread.csv`. It refuses
+to aggregate a model whose datasets were not all run at the same seeds, so a half-finished run cannot
+quietly produce a row averaged over fewer draws.
+
+### Adding an inference-only model
+
+A model that is not trained here needs no training code — only a script that writes the result file, since
+that file is the entire interface to the metrics. `scripts/molmo.py` (zero-shot, one run) and
+`scripts/few_shot_matching.py` (one-shot, five runs plus aggregation) are the two templates. Both run from
+their own environment rather than the project one, which is what keeps a new model's dependencies from
+disturbing the pinned versions the existing rows depend on.
 
 Five metrics are reported, defined in the "Metrics" section of the README: detection rate, median NME,
 PCK@0.05, strict success@0.05 and mAP@0.05. Things worth knowing before touching them:
@@ -93,9 +123,9 @@ PCK@0.05, strict success@0.05 and mAP@0.05. Things worth knowing before touching
   evaluation code is refactored. `test/test_metrics.py` pins the behaviour they depend on; the numbers
   themselves can only be checked against a previous `metrics.csv`, since the result files are gitignored.
 
-## Reproducibility: the two pinned dependencies
+## Reproducibility: the three pinned dependencies
 
-Results depend on code outside this repo, and both have already caused mislabeled numbers:
+Results depend on code outside this repo, and two of the three have already caused mislabeled numbers:
 
 - **`keypoint-detection` submodule.** Keep it pinned. It previously pointed at a commit containing no
   DinoV2 backbone at all while the working tree was several commits ahead, which is how a results column
@@ -103,9 +133,18 @@ Results depend on code outside this repo, and both have already caused mislabele
 - **`ultralytics`.** Pinned in `environment.yaml`. The version materially changes yolo results in *both*
   directions — going 8.3.58 to 8.4.120 moved AP-10K mean distance 87.6 to 35.6 and CUB 26.0 to 13.5, but
   ARTF tshirts 26.9 to 55.0. Never mix versions within a row of the table; retrain the whole model column.
+- **`few-shot-keypoints` submodule.** Produces the `fsk-` rows. Its pin is the weakest of the three and
+  currently only half real: the `uv.lock` committed at the pinned commit is stale relative to its own
+  `pyproject.toml`, so `uv sync` re-resolves rather than replaying it (it resolved transformers 4.56 →
+  5.15 the day these rows were produced), and RADIO's modelling code arrives unpinned through
+  `trust_remote_code`. What actually pins the environment is the version list in the docstring of
+  `scripts/few_shot_matching.py`. Upstreaming a refreshed lock would fix the first half.
 
 Training is otherwise deterministic: `seed=2024` for the heatmap models, and re-running an unchanged
-configuration reproduces its result file byte-for-byte.
+configuration reproduces its result file byte-for-byte. The one-shot rows are deterministic per seed for
+the same reason, but a *single* seed is not a result: their support set is drawn at random from the train
+split, and the standard deviation over five seeds reaches 15 PCK points on some datasets. Always run the
+full seed set and let the aggregator average it.
 
 ## Gotchas
 

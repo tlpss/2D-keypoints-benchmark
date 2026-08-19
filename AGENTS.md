@@ -31,6 +31,10 @@ not declared there. `ultralytics` is pinned, deliberately (see below).
 - `kp_2d_benchmark/eval/` — metrics and the COCO pydantic parsers
 - `scripts/pl_keypoint_detector.py` — trains the heatmap models (`MaxVitUnet`, `DinoV2Up`)
 - `scripts/yolo.py` — trains ultralytics pose models
+- `scripts/molmo.py` — zero-shot VLM baseline. Runs from its own uv venv, **not** the project env, so that
+  transformers cannot pull a different torch into the environment the pinned rows depend on; the result
+  file is the only interface. See its module docstring for the venv and the two things the result format
+  cannot express for a VLM.
 - `data/` — **entirely gitignored** (`data/.gitignore` is `**`). Datasets, results and run logs all live here
   and are never committed. Only `metrics.csv` at the repo root and the README tables are tracked.
 

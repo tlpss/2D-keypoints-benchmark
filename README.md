@@ -136,48 +136,53 @@ better. Column labels abbreviate the dataset names of the table at the top of th
 
 **detection_rate**
 
-| model          |    AP-10K |    Shorts |    Towels |   Tshirts |   CUB-200 |      GITW |    Garlic |
-|:---------------|----------:|----------:|----------:|----------:|----------:|----------:|----------:|
-| pkd-DinoV2Up   | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** |
-| pkd-MaxVitUnet | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** |
-| yolo26s        |      99.5 |      95.6 |      92.5 |      78.8 |      99.5 |      99.4 |      99.5 |
-| yolov8         |      99.9 |      98.9 |      94.5 |      98.2 |      99.8 | **100.0** | **100.0** |
+| model           |    AP-10K |    Shorts |    Towels |   Tshirts |   CUB-200 |      GITW |    Garlic |
+|:----------------|----------:|----------:|----------:|----------:|----------:|----------:|----------:|
+| Molmo-7B-D-0924 |         — | **100.0** |      98.8 | **100.0** |         — |         — | **100.0** |
+| pkd-DinoV2Up    | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** |
+| pkd-MaxVitUnet  | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** | **100.0** |
+| yolo26s         |      99.5 |      95.6 |      92.5 |      78.8 |      99.5 |      99.4 |      99.5 |
+| yolov8          |      99.9 |      98.9 |      94.5 |      98.2 |      99.8 | **100.0** | **100.0** |
 
 **median_nme**
 
-| model          |    AP-10K |    Shorts |    Towels |   Tshirts |   CUB-200 |      GITW |    Garlic |
-|:---------------|----------:|----------:|----------:|----------:|----------:|----------:|----------:|
-| pkd-DinoV2Up   | **0.024** | **0.019** |     0.010 |     0.015 | **0.018** |     0.014 |     0.027 |
-| pkd-MaxVitUnet |     0.026 |     0.026 | **0.007** | **0.013** | **0.018** | **0.011** | **0.026** |
-| yolo26s        |     0.032 |     0.287 |     0.041 |     0.065 |     0.021 |     0.021 |     0.030 |
-| yolov8         |     0.044 |     0.186 |     0.048 |     0.084 |     0.027 |     0.036 |     0.042 |
+| model           |    AP-10K |    Shorts |    Towels |   Tshirts |   CUB-200 |      GITW |    Garlic |
+|:----------------|----------:|----------:|----------:|----------:|----------:|----------:|----------:|
+| Molmo-7B-D-0924 |         — |     0.388 |     0.093 |     0.429 |         — |         — |     0.246 |
+| pkd-DinoV2Up    | **0.024** | **0.019** |     0.010 |     0.015 | **0.018** |     0.014 |     0.027 |
+| pkd-MaxVitUnet  |     0.026 |     0.026 | **0.007** | **0.013** | **0.018** | **0.011** | **0.026** |
+| yolo26s         |     0.032 |     0.287 |     0.041 |     0.065 |     0.021 |     0.021 |     0.030 |
+| yolov8          |     0.044 |     0.186 |     0.048 |     0.084 |     0.027 |     0.036 |     0.042 |
 
 **pck@0.05**
 
-| model          |   AP-10K |   Shorts |   Towels |   Tshirts |   CUB-200 |     GITW |   Garlic |
-|:---------------|---------:|---------:|---------:|----------:|----------:|---------:|---------:|
-| pkd-DinoV2Up   | **68.0** | **71.4** | **88.7** |  **78.2** |  **87.8** |     88.8 | **81.4** |
-| pkd-MaxVitUnet |     65.0 |     54.6 |     79.3 |      77.6 |      84.9 | **92.1** |     78.4 |
-| yolo26s        |     63.8 |      7.4 |     56.3 |      30.3 |      83.4 |     83.1 | **81.4** |
-| yolov8         |     54.8 |     10.2 |     49.6 |      30.1 |      79.5 |     65.3 |     58.0 |
+| model           |   AP-10K |   Shorts |   Towels |   Tshirts |   CUB-200 |     GITW |   Garlic |
+|:----------------|---------:|---------:|---------:|----------:|----------:|---------:|---------:|
+| Molmo-7B-D-0924 |        — |      4.3 |     22.6 |       6.1 |         — |        — |     13.1 |
+| pkd-DinoV2Up    | **68.0** | **71.4** | **88.7** |  **78.2** |  **87.8** |     88.8 | **81.4** |
+| pkd-MaxVitUnet  |     65.0 |     54.6 |     79.3 |      77.6 |      84.9 | **92.1** |     78.4 |
+| yolo26s         |     63.8 |      7.4 |     56.3 |      30.3 |      83.4 |     83.1 | **81.4** |
+| yolov8          |     54.8 |     10.2 |     49.6 |      30.1 |      79.5 |     65.3 |     58.0 |
 
 **strict_success@0.05**
 
-| model          |   AP-10K |   Shorts |   Towels |   Tshirts |   CUB-200 |     GITW |   Garlic |
-|:---------------|---------:|---------:|---------:|----------:|----------:|---------:|---------:|
-| pkd-DinoV2Up   |     11.4 | **19.4** | **73.8** |  **24.8** |  **24.7** |     60.0 | **65.8** |
-| pkd-MaxVitUnet |      9.4 |     11.7 |     50.7 |      22.2 |      18.7 | **74.5** |     58.3 |
-| yolo26s        | **12.8** |      0.0 |     26.2 |       0.2 |      17.9 |     46.8 |     65.3 |
-| yolov8         |      6.9 |      0.0 |     14.5 |       0.2 |      12.3 |     18.4 |     36.7 |
+| model           |   AP-10K |   Shorts |   Towels |   Tshirts |   CUB-200 |     GITW |   Garlic |
+|:----------------|---------:|---------:|---------:|----------:|----------:|---------:|---------:|
+| Molmo-7B-D-0924 |        — |      0.0 |      2.0 |       0.0 |         — |        — |      1.0 |
+| pkd-DinoV2Up    |     11.4 | **19.4** | **73.8** |  **24.8** |  **24.7** |     60.0 | **65.8** |
+| pkd-MaxVitUnet  |      9.4 |     11.7 |     50.7 |      22.2 |      18.7 | **74.5** |     58.3 |
+| yolo26s         | **12.8** |      0.0 |     26.2 |       0.2 |      17.9 |     46.8 |     65.3 |
+| yolov8          |      6.9 |      0.0 |     14.5 |       0.2 |      12.3 |     18.4 |     36.7 |
 
 **mAP@0.05**
 
-| model          |    AP-10K |    Shorts |    Towels |   Tshirts |   CUB-200 |      GITW |    Garlic |
-|:---------------|----------:|----------:|----------:|----------:|----------:|----------:|----------:|
-| pkd-DinoV2Up   | **0.559** | **0.627** | **0.850** | **0.728** | **0.790** |     0.867 |     0.717 |
-| pkd-MaxVitUnet |     0.537 |     0.439 |     0.699 |     0.726 |     0.760 | **0.904** |     0.694 |
-| yolo26s        |     0.470 |     0.010 |     0.407 |     0.142 |     0.713 |     0.785 | **0.719** |
-| yolov8         |     0.352 |     0.018 |     0.335 |     0.117 |     0.654 |     0.532 |     0.386 |
+| model           |    AP-10K |    Shorts |    Towels |   Tshirts |   CUB-200 |      GITW |    Garlic |
+|:----------------|----------:|----------:|----------:|----------:|----------:|----------:|----------:|
+| Molmo-7B-D-0924 |         — |     0.004 |     0.065 |     0.009 |         — |         — |     0.031 |
+| pkd-DinoV2Up    | **0.559** | **0.627** | **0.850** | **0.728** | **0.790** |     0.867 |     0.717 |
+| pkd-MaxVitUnet  |     0.537 |     0.439 |     0.699 |     0.726 |     0.760 | **0.904** |     0.694 |
+| yolo26s         |     0.470 |     0.010 |     0.407 |     0.142 |     0.713 |     0.785 | **0.719** |
+| yolov8          |     0.352 |     0.018 |     0.335 |     0.117 |     0.654 |     0.532 |     0.386 |
 
 Numbers are produced by `kp_2d_benchmark/eval/calculate_all_metrics.py` from the result files in
 `data/results/`, and are reproducible: the training uses a fixed seed, and re-running a model on an
@@ -212,6 +217,62 @@ Both have already produced mislabeled numbers, so keep them pinned when updating
 - **mAP is much lower than PCK on AP-10K and CUB-200** because it is the only metric that charges for
   predicting a keypoint that is out of view, and 41% respectively 20% of their keypoint slots are. Both
   model families always emit every keypoint channel, so both pay for it.
+
+
+### The zero-shot VLM row
+
+`Molmo-7B-D-0924` is a zero-shot baseline, produced by `scripts/molmo.py`: one "point to X" prompt per
+keypoint, with the model's percentage coordinates scaled to pixels. It has seen no training data from any
+of these datasets, so it is not a like-for-like comparison with the finetuned rows — it answers a different
+question, namely how far a general-purpose pointing model gets with no task-specific supervision. It has
+been run on four of the seven datasets so far; `—` marks the ones it has not.
+
+The short answer is: not very far. It always finds the object — detection rate is 98.8-100% — but PCK@0.05
+lands between 4.3 and 22.6 against 54.6-92.1 for the trained models, and it gets *every* keypoint of a
+garment right in 0% of images.
+
+**The interesting part is that the failure is not the same failure on each dataset.** Comparing the mean
+pairwise distance between an image's keypoints, normalised by object scale, tells them apart:
+
+| dataset | keypoints | ground truth spread | Molmo spread | predicted pairs closer than `0.05·s` | PCK@0.05 |
+|:---|---:|---:|---:|---:|---:|
+| Garlic | 2 | 0.89 | **0.02** | **100%** | 13.1 |
+| Towels | 4 | 0.81 | 0.71 | 0% | 22.6 |
+| Shorts | 7 | 0.59 | 0.46 | 10% | 4.3 |
+| Tshirts | 12 | 0.56 | 0.46 | 9% | 6.1 |
+
+On **towels** it does the task as intended: four prompts, four distinct corners, no collapse, and its best
+score of the four. On **shorts and tshirts** it also spreads its points out, but puts them in the wrong
+places — asked for the inner rather than the outer corner of a leg opening, it answers somewhere plausible
+and wrong. On **garlic** it does something different again: it returns *the same pixel* for both prompts in
+essentially every image.
+
+That last case is worth seeing in full. Garlic test image 42, object scale 135 px, so the PCK@0.05 threshold
+is 6.7 px:
+
+| | head | tail | apart |
+|:---|:---|:---|---:|
+| ground truth | (165.3, 110.0) | (80.1, 219.5) | 138.7 px |
+| Molmo | (78.1, 217.9) | (78.1, 217.9) | 0.0 px |
+| error | 138.7 px | **2.6 px** | |
+
+Molmo locates the tail to within 2.6 px — comfortably inside the threshold — and then gives that same pixel
+as its answer for the head. The problem is not precision. Asked which end of a garlic bulb is the root and
+which is the stem, it finds one end accurately and uses it for both questions.
+
+This is also not a labelling flip, which is the obvious thing to suspect. Scoring the garlic predictions
+three ways: as reported **13.1%**, with head and tail swapped **14.1%**, and ignoring keypoint identity
+altogether by taking the better of the two assignments per image **18.8%**. Even given a free pass on which
+end is which, it gains under six points — the keypoints genuinely are not being distinguished.
+
+Two caveats on how these rows should be read:
+
+- **Molmo has no per-keypoint confidence.** Every keypoint it points at is written with a score of 1.0, so
+  the mAP column reflects precision and recall but not confidence ranking, and it is not comparable to the
+  trained rows on that axis.
+- **Keypoints it declines to point at fall back to the image centre with a score of 0.** This matters most
+  on tshirts, where it refused 702 of 4800 keypoints (14.6%); those are counted as localisation failures
+  rather than as missed detections, since the result format records detection per image, not per keypoint.
 
 
 ## Local Development

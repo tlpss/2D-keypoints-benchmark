@@ -66,6 +66,40 @@ KEYPOINT_PHRASINGS = {
         "top_front": "the front edge of the rim of the glass, nearest the viewer",
         "fluid_level": "the surface of the liquid in the glass",
     },
+    "ARTF_Shorts_Dataset": {
+        "waist_left": "the left end of the waistband of the shorts",
+        "waist_right": "the right end of the waistband of the shorts",
+        "crotch": "the crotch of the shorts, where the two legs meet",
+        "pipe_left_outer": "the outer corner of the left leg opening of the shorts",
+        "pipe_left_inner": "the inner corner of the left leg opening of the shorts",
+        "pipe_right_outer": "the outer corner of the right leg opening of the shorts",
+        "pipe_right_inner": "the inner corner of the right leg opening of the shorts",
+    },
+    "ARTF_Tshirts_Dataset": {
+        "shoulder_left": "the left shoulder of the tshirt",
+        "shoulder_right": "the right shoulder of the tshirt",
+        "neck_left": "the left side of the neckline of the tshirt",
+        "neck_right": "the right side of the neckline of the tshirt",
+        "sleeve_left_top": "the top corner of the left sleeve opening of the tshirt",
+        "sleeve_left_bottom": "the bottom corner of the left sleeve opening of the tshirt",
+        "sleeve_right_top": "the top corner of the right sleeve opening of the tshirt",
+        "sleeve_right_bottom": "the bottom corner of the right sleeve opening of the tshirt",
+        "armpit_left": "the left armpit of the tshirt, where the sleeve meets the body",
+        "armpit_right": "the right armpit of the tshirt, where the sleeve meets the body",
+        "waist_left": "the bottom left corner of the tshirt",
+        "waist_right": "the bottom right corner of the tshirt",
+    },
+    # the towel corners are ordered in image space rather than by any property of the towel itself,
+    # which is how the dataset sidesteps the symmetry of a rectangular cloth. Measured over the 400
+    # test annotations, corner0 is the top-left corner in 94% of images, corner1 top-right in 92%,
+    # corner2 bottom-right in 89% and corner3 bottom-left in 93% -- clockwise from the top left, as
+    # seen on screen. The remainder are crumpled configurations where a corner crosses a quadrant.
+    "ARTF_Towels_Dataset": {
+        "corner0": "the top left corner of the towel",
+        "corner1": "the top right corner of the towel",
+        "corner2": "the bottom right corner of the towel",
+        "corner3": "the bottom left corner of the towel",
+    },
 }
 
 

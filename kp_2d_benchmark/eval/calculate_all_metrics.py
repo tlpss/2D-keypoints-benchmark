@@ -10,7 +10,7 @@ The metrics themselves are defined in the "Metrics" section of the README.
 import csv
 import json
 import os
-from typing import Callable, Dict, List
+from typing import Callable, Dict, List, NamedTuple
 
 from kp_2d_benchmark.datasets import DATASETS
 from kp_2d_benchmark.eval.calculate_keypoint_ap import AP_ALPHA, calculate_keypoint_ap
@@ -41,22 +41,41 @@ def _one_decimal(value: float) -> str:
     return f"{value:.1f}"
 
 
-# the five metrics the README reports, in the order they appear there, and how to format each of them.
+class MetricSpec(NamedTuple):
+    """How to render a metric, and which end of its range is good."""
+
+    format: Callable[[float], str]
+    higher_is_better: bool
+
+
+# the five metrics the README reports, in the order they appear there.
 # the raw pixel distances are kept in the csv for continuity but are no longer headline numbers.
-HEADLINE_METRICS: Dict[str, Callable[[float], str]] = {
-    "detection_rate": _percentage,
-    "median_nme": _three_decimals,
-    f"pck@{PCK_ALPHA}": _percentage,
-    f"strict_success@{STRICT_SUCCESS_ALPHA}": _percentage,
-    f"mAP@{AP_ALPHA}": _three_decimals,
+HEADLINE_METRICS: Dict[str, MetricSpec] = {
+    "detection_rate": MetricSpec(_percentage, higher_is_better=True),
+    "median_nme": MetricSpec(_three_decimals, higher_is_better=False),
+    f"pck@{PCK_ALPHA}": MetricSpec(_percentage, higher_is_better=True),
+    f"strict_success@{STRICT_SUCCESS_ALPHA}": MetricSpec(_percentage, higher_is_better=True),
+    f"mAP@{AP_ALPHA}": MetricSpec(_three_decimals, higher_is_better=True),
 }
 
-LEGACY_METRICS: Dict[str, Callable[[float], str]] = {
-    "average_keypoint_distance": _one_decimal,
-    "median_keypoint_distance": _one_decimal,
+LEGACY_METRICS: Dict[str, MetricSpec] = {
+    "average_keypoint_distance": MetricSpec(_one_decimal, higher_is_better=False),
+    "median_keypoint_distance": MetricSpec(_one_decimal, higher_is_better=False),
 }
 
 METRIC_FORMATTERS = {**HEADLINE_METRICS, **LEGACY_METRICS}
+
+# short column labels, so that a table with every dataset in it still fits on a page. datasets that are
+# not listed keep their repr, so adding one degrades the layout rather than breaking the table.
+DATASET_LABELS = {
+    "RoboflowGarlic256Dataset": "Garlic",
+    "ARTF_Towels_Dataset": "Towels",
+    "ARTF_Shorts_Dataset": "Shorts",
+    "ARTF_Tshirts_Dataset": "Tshirts",
+    "CUB200_2011_512": "CUB-200",
+    "AP10K_512": "AP-10K",
+    "GITW_256": "GITW",
+}
 
 CSV_FIELDS = ["model", "dataset", *METRIC_FORMATTERS]
 
@@ -122,7 +141,18 @@ def write_metrics_csv(rows: List[Dict[str, object]], metric_csv_path: str) -> No
             writer.writerow(row)
 
 
-def format_results_csv_as_markdown_table(metric_csv_path: str, metrics: Dict[str, Callable] = None) -> str:
+def _emphasise_best(column, higher_is_better: bool):
+    """Bold the best entry of one already formatted column, and every entry that ties with it.
+
+    The comparison is on the formatted value rather than the raw one, so that two cells which are printed
+    identically are either both bold or neither, instead of one winning on invisible decimals.
+    """
+    values = [float(value) for value in column]
+    best = max(values) if higher_is_better else min(values)
+    return [f"**{value}**" if number == best else value for value, number in zip(column, values)]
+
+
+def format_results_csv_as_markdown_table(metric_csv_path: str, metrics: Dict[str, MetricSpec] = None) -> str:
     """Render one markdown table per metric, models in rows and datasets in columns."""
     import pandas as pd
 
@@ -130,9 +160,12 @@ def format_results_csv_as_markdown_table(metric_csv_path: str, metrics: Dict[str
 
     df = pd.read_csv(metric_csv_path)
     tables = []
-    for metric, formatter in metrics.items():
+    for metric, spec in metrics.items():
         table = df.pivot(index="model", columns="dataset", values=metric)
-        table = table.map(formatter)
+        table = table.rename(columns=lambda dataset: DATASET_LABELS.get(dataset, dataset))
+        table = table.map(spec.format)
+        for column in table.columns:
+            table[column] = _emphasise_best(table[column], spec.higher_is_better)
         # disable_numparse keeps tabulate from re-parsing the formatted strings back into numbers, which
         # would drop trailing zeroes and undo the per-metric formatting. that also loses the numeric
         # alignment, so the columns are aligned explicitly.

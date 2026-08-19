@@ -141,15 +141,31 @@ def write_metrics_csv(rows: List[Dict[str, object]], metric_csv_path: str) -> No
             writer.writerow(row)
 
 
+NOT_AVAILABLE = "—"
+"""Printed for a model/dataset combination that has no result file. A model evaluated on only some of
+the datasets — a VLM baseline, or a run in progress — would otherwise put the literal string "nan" in
+every missing cell of the published table."""
+
+
+def _format_cell(value, formatter: Callable[[float], str]) -> str:
+    if value is None or value != value:  # NaN: the pivot had no row for this model and dataset
+        return NOT_AVAILABLE
+    return formatter(value)
+
+
 def _emphasise_best(column, higher_is_better: bool):
     """Bold the best entry of one already formatted column, and every entry that ties with it.
 
     The comparison is on the formatted value rather than the raw one, so that two cells which are printed
-    identically are either both bold or neither, instead of one winning on invisible decimals.
+    identically are either both bold or neither, instead of one winning on invisible decimals. Cells with
+    no result take part in neither the comparison nor the bolding.
     """
-    values = [float(value) for value in column]
-    best = max(values) if higher_is_better else min(values)
-    return [f"**{value}**" if number == best else value for value, number in zip(column, values)]
+    numbers = [None if value == NOT_AVAILABLE else float(value) for value in column]
+    present = [number for number in numbers if number is not None]
+    if not present:
+        return list(column)
+    best = max(present) if higher_is_better else min(present)
+    return [f"**{value}**" if number == best else value for value, number in zip(column, numbers)]
 
 
 def format_results_csv_as_markdown_table(metric_csv_path: str, metrics: Dict[str, MetricSpec] = None) -> str:
@@ -163,7 +179,7 @@ def format_results_csv_as_markdown_table(metric_csv_path: str, metrics: Dict[str
     for metric, spec in metrics.items():
         table = df.pivot(index="model", columns="dataset", values=metric)
         table = table.rename(columns=lambda dataset: DATASET_LABELS.get(dataset, dataset))
-        table = table.map(spec.format)
+        table = table.map(lambda value: _format_cell(value, spec.format))
         for column in table.columns:
             table[column] = _emphasise_best(table[column], spec.higher_is_better)
         # disable_numparse keeps tabulate from re-parsing the formatted strings back into numbers, which

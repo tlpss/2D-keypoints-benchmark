@@ -9,7 +9,7 @@ import copy
 
 import pytest
 
-from kp_2d_benchmark.eval.calculate_all_metrics import parse_result_file_name
+from kp_2d_benchmark.eval.calculate_all_metrics import NOT_AVAILABLE, parse_result_file_name
 from kp_2d_benchmark.eval.calculate_keypoint_ap import calculate_keypoint_ap
 from kp_2d_benchmark.eval.calculate_keypoint_distance_metrics import (
     calculate_average_distances,
@@ -228,3 +228,23 @@ def test_normalisation_makes_alpha_scale_invariant(dataset, results):
 )
 def test_parse_result_file_name(file_name, model, dataset_name):
     assert parse_result_file_name(file_name) == (model, dataset_name)
+
+
+def test_missing_results_do_not_print_nan_in_the_table(tmp_path):
+    """A model evaluated on only some of the datasets must not put "nan" in the published table."""
+    import csv
+
+    from kp_2d_benchmark.eval.calculate_all_metrics import CSV_FIELDS, format_results_csv_as_markdown_table
+
+    row = {field: 0.5 for field in CSV_FIELDS}
+    csv_path = tmp_path / "metrics.csv"
+    with open(csv_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=CSV_FIELDS)
+        writer.writeheader()
+        writer.writerow({**row, "model": "covers-both", "dataset": "dataset_a"})
+        writer.writerow({**row, "model": "covers-both", "dataset": "dataset_b"})
+        writer.writerow({**row, "model": "covers-one", "dataset": "dataset_a"})
+
+    table = format_results_csv_as_markdown_table(str(csv_path))
+    assert "nan" not in table.lower()
+    assert NOT_AVAILABLE in table

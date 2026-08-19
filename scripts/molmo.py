@@ -9,10 +9,13 @@ Run it from a *separate* environment, not the benchmark one. transformers and it
 pull in a different torch, and the pinned ultralytics and keypoint-detection versions are what make
 the existing rows of the table reproducible. The result file is the only interface that matters:
 
-    conda create -n molmo python=3.12
-    conda activate molmo
-    pip install torch transformers accelerate einops torchvision pillow
-    PYTHONPATH=/path/to/2D-keypoints-benchmark python scripts/molmo.py --dataset RoboflowGarlic256Dataset
+    uv venv --python 3.12 .venv-molmo   # 3.12: kp_2d_benchmark uses 3.12-only f-string syntax
+    VIRTUAL_ENV=.venv-molmo uv pip install torch==2.5.1 torchvision transformers==4.45.0 \
+        accelerate einops pillow safetensors sentencepiece pydantic
+    PYTHONPATH=. .venv-molmo/bin/python scripts/molmo.py --dataset RoboflowGarlic256Dataset
+
+transformers is pinned to the release-era version: Molmo ships its own modelling code through
+trust_remote_code, and later transformers releases have changed APIs that code relies on.
 
 Two things to know about the numbers this produces:
 
@@ -116,7 +119,17 @@ class MolmoPointer:
         from transformers import GenerationConfig
 
         inputs = self.processor.process(images=[image], text=prompt)
-        inputs = {k: v.to(self.model.device).unsqueeze(0) for k, v in inputs.items()}
+        # the processor always emits float32 image tensors, so with bfloat16 weights the vision
+        # tower's first matmul gets mismatched dtypes. cast the float tensors and leave the integer
+        # ones (input_ids, image_input_idx, ...) alone.
+        inputs = {
+            k: (
+                v.to(self.model.device, dtype=self.torch.bfloat16).unsqueeze(0)
+                if v.is_floating_point()
+                else v.to(self.model.device).unsqueeze(0)
+            )
+            for k, v in inputs.items()
+        }
 
         output = self.model.generate_from_batch(
             inputs,
